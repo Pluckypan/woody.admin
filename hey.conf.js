@@ -5,7 +5,7 @@ module.exports = {
   root: 'docs',
   webpack: {
     console: true,
-    publicPath: '/',
+    publicPath: '/woody.admin/',
     output: {
       './index.html': {
         entry: './src/main',
