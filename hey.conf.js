@@ -5,7 +5,7 @@ module.exports = {
   root: 'docs',
   webpack: {
     console: true,
-    publicPath: '/woody.admin/',
+    publicPath: 'http://www.echo.engineer/woody.admin/',
     output: {
       './index.html': {
         entry: './src/main',
