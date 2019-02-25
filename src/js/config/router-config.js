@@ -5,7 +5,7 @@ import demoComponents from './demo-components';
 Vue.use(VueRouter);
 var isDev = process.env.NODE_ENV === 'development'
 console.log(isDev)
-var host = isDev ? "" : "http://www.echo.engineer/woody.admin"
+var host = isDev ? "" : "/woody.admin"
 
 const initRouter = () => {
 	const routerParam = {
