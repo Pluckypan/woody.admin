@@ -7,7 +7,7 @@ Mock.setup({
 Mock.mock('/api/account/info', "get", {
   "status": 200,
   "body": {
-    name: 'vvpvvp',
+    name: 'plucky',
     desc: '执着于理想，纯粹于当下',
     email: 'HeyUI@some.com',
     org: '某某公司',

@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     goGithub() {
-      window.open('https://github.com/heyui/heyui-admin');
+      window.open('https://github.com/Pluckypan/woody.admin');
     },
     trigger(data) {
       if (data == "logout") {

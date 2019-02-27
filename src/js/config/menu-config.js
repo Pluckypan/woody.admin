@@ -37,49 +37,11 @@ const menuConfig = [
       {
         title: '表单详情',
         key: 'formDetail'
-      }
-    ]
-  },
-  {
-    title: '模糊匹配',
-    key: 'AutoComplete-folder',
-    icon: 'icon-disc',
-    children: [
-      {
-        title: '模糊搜索',
-        key: 'autocomplete1'
       },
-      {
-        title: '场景应用',
-        key: 'autocomplete2'
-      },
-      {
-        title: '复杂场景',
-        key: 'autocomplete3'
-      }
-    ]
-  },
-  {
-    title: '扩展组件',
-    key: 'Advance-folder',
-    icon: 'icon-bar-graph-2',
-    children: [
-      {
-        title: '图表',
-        key: 'chart'
-      },
-      {
-        title: '富文本编辑器',
-        key: 'ricktextEditor'
-      },
-      {
-        title: '代码编辑器',
-        key: 'codeEditor'
-      },
-      {
-        title: 'Markdown编辑器',
-        key: 'markdownEditor'
-      }
+			{
+			  title: '模糊匹配',
+			  key: 'autocomplete2'
+			}
     ]
   },
   {
@@ -94,25 +56,6 @@ const menuConfig = [
       {
         title: '安全设置',
         key: 'securitySetting'
-      }
-    ]
-  },
-  {
-    title: '异常页面',
-    key: 'error-pages',
-    icon: 'icon-circle-cross',
-    children: [
-      {
-        title: '403',
-        key: 'permissionError'
-      },
-      {
-        title: '404',
-        key: 'notfoundError'
-      },
-      {
-        title: '500',
-        key: 'systemError'
       }
     ]
   }
