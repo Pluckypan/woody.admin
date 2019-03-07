@@ -87,19 +87,18 @@
   <div class="login-vue">
     <div class="login-container">
       <div class="login-content">
-        <div class="login-title">管理系统</div>
+        <div class="login-title">Woody Admin</div>
         <div class="login-name">
-          <input type="text" v-model="login.username" placeholder="用户名"/>
+          <input type="text" v-model="login.username" placeholder="Username"/>
         </div>
         <div class="login-password">
-          <input type="password" v-model="login.password" placeholder="密码" @keyup.enter="submit"/>
+          <input type="password" v-model="login.password" placeholder="Token" @keyup.enter="submit"/>
         </div>
         <div class="buttonDiv">
-          <Button :loading="loading" block color="primary" size="l" @click="submit">登录</Button>
+          <Button :loading="loading" block color="primary" size="l" @click="submit">Sign in</Button>
         </div>
       </div>
-      <p class="copyright"> Copyright © 2019 HeyUI. - <a href="https://www.heyui.top/">heyui.top</a></p>
-    </div>
+      <p class="copyright"> Copyright © 2019 Woody. - <a href="https://github.com/Pluckypan/Woody">Woody/div>
   </div>
 </template>
 <script>
