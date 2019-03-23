@@ -48,6 +48,20 @@ const initRouter = () => {
 					meta: {
 						title: '页面找不到'
 					}
+				}, {
+					path: '/category',
+					name: 'category',
+					component: (resolve) => require(['components/bookmarks/category'], resolve),
+					meta: {
+						title: '分类'
+					}
+				}, {
+					path: '/bookmark',
+					name: 'bookmark',
+					component: (resolve) => require(['components/bookmarks/bookmark'], resolve),
+					meta: {
+						title: '分类'
+					}
 				},
 				...demoComponents,
 				{

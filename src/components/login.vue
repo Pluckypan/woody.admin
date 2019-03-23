@@ -107,7 +107,7 @@
 			</div>
 			<p class="copyright">
 				Copyright © 2019 Woody. -
-				<a href="https://github.com/Pluckypan/Woody/">Woody</a>
+				<a href="https://github.com/Pluckypan/Woody">Woody</a>
 			</p>
 		</div>
 	</div>

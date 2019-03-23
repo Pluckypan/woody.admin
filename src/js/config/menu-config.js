@@ -1,64 +1,73 @@
-const menuConfig = [
-  {
-    title: 'Dashboard',
-    key: 'Home',
-    icon: 'icon-monitor',
-    count: 1
-  },
-  {
-    title: 'Icons',
-    key: 'icons',
-    icon: 'icon-heart'
-  },
-  {
-    title: '列表应用',
-    key: 'tablelist',
-    icon: 'icon-grid-2',
-    children: [
-      {
-        title: '基础表格',
-        key: 'tableBasic'
-      },
-      {
-        title: '查询列表',
-        key: 'tableSearch'
-      }
-    ]
-  },
-  {
-    title: '表单应用',
-    key: 'form-folder',
-    icon: 'icon-paper',
-    children: [
-      {
-        title: '基础表单',
-        key: 'form'
-      },
-      {
-        title: '表单详情',
-        key: 'formDetail'
-      },
+const menuConfig = [{
+		title: 'Dashboard',
+		key: 'Home',
+		icon: 'icon-monitor',
+		count: 1
+	},
+	{
+		title: 'Icons',
+		key: 'icons',
+		icon: 'icon-heart'
+	},
+	{
+		title: '列表应用',
+		key: 'tablelist',
+		icon: 'icon-grid-2',
+		children: [{
+				title: '基础表格',
+				key: 'tableBasic'
+			},
 			{
-			  title: '模糊匹配',
-			  key: 'autocomplete2'
+				title: '查询列表',
+				key: 'tableSearch'
 			}
-    ]
-  },
-  {
-    title: '系统设置',
-    key: 'sys-setting',
-    icon: 'icon-cog',
-    children: [
-      {
-        title: '个人中心',
-        key: 'accountBasic'
-      },
-      {
-        title: '安全设置',
-        key: 'securitySetting'
-      }
-    ]
-  }
+		]
+	}, {
+		title: '书签管理',
+		key: 'woody',
+		icon: 'icon-grid-2',
+		children: [{
+				title: '分类',
+				key: 'category'
+			},
+			{
+				title: '书签',
+				key: 'bookmark'
+			}
+		]
+	},
+	{
+		title: '表单应用',
+		key: 'form-folder',
+		icon: 'icon-paper',
+		children: [{
+				title: '基础表单',
+				key: 'form'
+			},
+			{
+				title: '表单详情',
+				key: 'formDetail'
+			},
+			{
+				title: '模糊匹配',
+				key: 'autocomplete2'
+			}
+		]
+	},
+	{
+		title: '系统设置',
+		key: 'sys-setting',
+		icon: 'icon-cog',
+		children: [{
+				title: '个人中心',
+				key: 'accountBasic'
+			},
+			{
+				title: '安全设置',
+				key: 'securitySetting'
+			}
+		]
+	}
 ];
 
 export default menuConfig;
