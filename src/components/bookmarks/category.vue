@@ -58,20 +58,20 @@
 	</div>
 </template>
 <script>
+import manba from 'manba';
 export default {
 	data() {
-		let that = this;
 		return {
 			mode: 'single',
 			data: {
 				pid: '0x000',
 				id: '0x001',
 				name: '常用',
-				desc: '',
+				desc: 'woody',
 				order: 0,
-				create_time: Date.now(),
+				create_time: manba().format(),
 				cats: [
-					{ title: '根', key: '0x000'},
+					{ title: '根', key: '0x000' },
 					{ title: 'Android', key: '0x001' },
 					{ title: 'iOS', key: '0x002' }
 				]
@@ -84,13 +84,20 @@ export default {
 	},
 	methods: {
 		submit() {
+			let that = this;
+			let _gist=Utils.getLocal('gist')
+			let _token=Utils.getLocal('token')
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
 				this.$Message('验证成功');
 				this.isLoading = true;
-				setTimeout(() => {
-					this.isLoading = false;
-				}, 1000);
+				GH.Gist.get(
+					_gist,
+					_token
+				).then(resp => {
+					that.loading = false;
+					console.log(resp);
+				});
 			}
 		},
 		reset() {

@@ -89,12 +89,12 @@
 			<div class="login-content">
 				<div class="login-title">Woody Admin</div>
 				<div class="login-name">
-					<input type="text" v-model="login.username" placeholder="Username" />
+					<input type="text" v-model="login.gist" placeholder="Gist" />
 				</div>
 				<div class="login-password">
 					<input
 						type="password"
-						v-model="login.password"
+						v-model="login.token"
 						placeholder="Token"
 						@keyup.enter="submit"
 					/>
@@ -127,8 +127,8 @@ export default {
 			this.loading = true;
 			R.Login.login(Login.dispose(this.login)).then(resp => {
 				if (resp.ok) {
-					let msg = resp.body;
-					Utils.saveLocal('token', msg.value);
+					Utils.saveLocal('gist', this.login.gist);
+					Utils.saveLocal('token', this.login.token);
 					this.$router.replace('/');
 				}
 				this.loading = false;
