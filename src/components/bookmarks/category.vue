@@ -50,6 +50,8 @@
 					<FormItem :no-padding="true">
 						<Button color="primary" :loading="isLoading" @click="submit">提交</Button>
 						&nbsp;&nbsp;&nbsp;
+						<Button color="primary" :loading="isLoading" @click="request">请求</Button>
+						&nbsp;&nbsp;&nbsp;
 						<Button @click="reset">重置</Button>
 					</FormItem>
 				</Form>
@@ -85,20 +87,53 @@ export default {
 	methods: {
 		submit() {
 			let that = this;
-			let _gist=Utils.getLocal('gist')
-			let _token=Utils.getLocal('token')
+			let _gist = Utils.getLocal('gist');
+			let _token = Utils.getLocal('token');
+			GH.Gist.auth(_token);
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
 				this.$Message('验证成功');
-				this.isLoading = true;
-				GH.Gist.get(
-					_gist,
-					_token
-				).then(resp => {
-					that.loading = false;
-					console.log(resp);
-				});
+				var jsonFile = {
+					description: '《咏柳》贺知章',
+					public: false,
+					files: {
+						'category.json': {
+							content:
+								'碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。'
+						}
+					}
+				};
+				GH.Gist.edit(_gist,jsonFile)
+					.then(function(response) {
+						if (response.status == 200) {
+							console.log(response.data);
+						}
+						that.isLoading = false;
+					})
+					.catch(function(error) {
+						that.isLoading = false;
+						console.log(error);
+					});
 			}
+		},
+		request() {
+			let that = this;
+			let _gist = Utils.getLocal('gist');
+			let _token = Utils.getLocal('token');
+			GH.Gist.auth(_token);
+			this.isLoading = true;
+			GH.Gist.get(_gist)
+				.then(function(response) {
+					if (response.status == 200) {
+						console.log(response.data);
+					}
+					that.isLoading = false;
+				})
+				.catch(function(error) {
+					that.isLoading = false;
+					//console.log(error);
+					that.$Message.error('提交失败');
+				});
 		},
 		reset() {
 			this.isLoading = false;

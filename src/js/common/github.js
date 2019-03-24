@@ -1,11 +1,28 @@
-import Ajax from './ajax';
+import axios from 'axios';
+import qs from 'qs';
 const SEP = "/"
 const _API = "https://api.github.com"
-const _GIST = _API + SEP + "gists" + SEP
+
+var instance = axios.create({
+	baseURL: _API
+});
+
 const Github = {
 	Gist: {
-		get(id,token) {
-			return Ajax.get(_GIST+id);
+		auth(token) {
+			instance.defaults.headers.common['Authorization'] = token;
+			instance.defaults.headers.common['Accept'] = 'application/vnd.github.v3.raw+json';
+		},
+		get(id) {
+			return instance.get("/gists/" + id);
+		},
+		edit(id,jsonFile) {
+			return instance({
+				method: 'post',
+				dataType: 'JSON',
+				url: "/gists/" + id,
+				data: JSON.stringify(jsonFile)
+			});
 		}
 	},
 	Repo: {
