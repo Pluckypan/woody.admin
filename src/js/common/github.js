@@ -10,7 +10,7 @@ var instance = axios.create({
 const Github = {
 	Gist: {
 		auth(token) {
-			instance.defaults.headers.common['Authorization'] = token;
+			instance.defaults.headers.common['Authorization'] = "token "+token;
 			instance.defaults.headers.common['Accept'] = 'application/vnd.github.v3.raw+json';
 		},
 		get(id) {
@@ -18,10 +18,10 @@ const Github = {
 		},
 		edit(id,jsonFile) {
 			return instance({
-				method: 'post',
+				method: 'POST',
 				dataType: 'JSON',
 				url: "/gists/" + id,
-				data: JSON.stringify(jsonFile)
+				data: jsonFile
 			});
 		}
 	},

@@ -61,6 +61,7 @@
 </template>
 <script>
 import manba from 'manba';
+var arr=[];
 export default {
 	data() {
 		return {
@@ -93,13 +94,12 @@ export default {
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
 				this.$Message('验证成功');
+				arr.push(this.data)
 				var jsonFile = {
-					description: '《咏柳》贺知章',
-					public: false,
 					files: {
 						'category.json': {
 							content:
-								'碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。'
+								JSON.stringify(arr)
 						}
 					}
 				};
