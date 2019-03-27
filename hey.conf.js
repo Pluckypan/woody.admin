@@ -37,7 +37,8 @@ module.exports = {
       G: 'hey-global',
       log: 'hey-log',
       R: [path.resolve(__dirname, 'src/js/common/request'), 'default'],
-			GH: [path.resolve(__dirname, 'src/js/common/github'), 'default']
+			GH: [path.resolve(__dirname, 'src/js/common/github'), 'default'],
+			DB: [path.resolve(__dirname, 'src/js/common/database'), 'default']
     },
     devServer: {
       proxy: {
