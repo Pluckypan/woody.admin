@@ -1,8 +1,8 @@
 import low from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
-
 const adapter = new LocalStorage('woody')
 const shortid = require('shortid')
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZⓌⓎ');
 const db = low(adapter)
 
 db.defaults({

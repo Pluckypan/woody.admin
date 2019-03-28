@@ -27,8 +27,11 @@ const menuConfig = [{
 		key: 'woody',
 		icon: 'icon-grid-2',
 		children: [{
-				title: '分类',
-				key: 'category'
+				title: '添加分类',
+				key: 'add_category'
+			}, {
+				title: '分类列表',
+				key: 'categorys'
 			},
 			{
 				title: '书签',
