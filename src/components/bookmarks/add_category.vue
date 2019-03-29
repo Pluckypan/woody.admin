@@ -61,9 +61,7 @@
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="reset">重置</Button>
 						&nbsp;&nbsp;&nbsp;
-						<Button color="primary" :loading="submitting" @click="submit">
-							提交
-						</Button>
+						<Button color="primary" :loading="submitting" @click="submit">提交</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button color="primary" :loading="syncing" @click="sync">同步</Button>
 					</FormItem>
@@ -79,14 +77,14 @@ export default {
 		return {
 			mode: 'single',
 			category: {
-				pid: '0',
+				pid: 'root',
 				id: DB.IDMaker.gen(),
-				name: '常用',
-				desc: 'woody',
+				name: '',
+				desc: '',
 				order: 0,
 				create_time: manba().format('f')
 			},
-			cats: [{ title: '根', key: '0' }],
+			cats: [{ title: '根', key: 'root' }],
 			submitting: false,
 			syncing: false,
 			validationRules: {
@@ -158,6 +156,9 @@ export default {
 		},
 		reset() {
 			this.category.id = DB.IDMaker.gen();
+			this.category.create_time = manba().format('f');
+			this.category.desc = '';
+			this.category.name = '';
 			this.submitting = false;
 			this.syncing = false;
 			this.$refs.form.reset();

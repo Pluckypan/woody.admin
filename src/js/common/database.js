@@ -2,7 +2,7 @@ import low from 'lowdb'
 import LocalStorage from 'lowdb/adapters/LocalStorage'
 const adapter = new LocalStorage('woody')
 const shortid = require('shortid')
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZⓌⓎ');
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&@');
 const db = low(adapter)
 
 db.defaults({
@@ -22,6 +22,11 @@ const Database = {
 		},
 		clearAll(){
 		db.get("category").remove().write()
+		},
+		remove(data){
+			db.get("category").remove({
+				id:data.id
+			}).write()
 		},
 		push(data) {
 			if (!data) return
