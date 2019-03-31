@@ -1,14 +1,10 @@
-import low from 'lowdb'
-import LocalStorage from 'lowdb/adapters/LocalStorage'
-const adapter = new LocalStorage('woody')
 const shortid = require('shortid')
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&@');
-const db = low(adapter)
-
-db.defaults({
-	category: [],
-	bookmark: []
-}).write()
+const Datastore = require('nedb');
+const categorys = new Datastore({
+	filename: 'category',
+	autoload: true
+});
 
 const Database = {
 	IDMaker: {
@@ -17,32 +13,37 @@ const Database = {
 		}
 	},
 	Category: {
-		getAll() {
-			return db.get("category").cloneDeep().value()
+		//function(err, docs)
+		getAll(callback) {
+			categorys.find({}, callback);
 		},
-		clearAll() {
-			db.get("category").remove().write()
+		//function(err, numRemoved)
+		clearAll(callback) {
+			categorys.remove({}, {
+				multi: true
+			}, callback);
 		},
-		remove(data) {
-			db.get("category").remove({
+		//function(err, numRemoved)
+		remove(data, callback) {
+			categorys.remove({
 				id: data.id
-			}).write()
+			}, {}, callback);
 		},
-		removeArray(arr) {
+		//function(err, numRemoved)
+		removeArray(arr, callback) {
 			const ids = arr.map(function(item) {
 				return item.id;
 			});
 			console.log(ids)
-			db.get("category").removeWhere(id:{
-				$in:ids
-			}).write()
+			categorys.remove({
+				id: {
+					$in: ids
+				}
+			}, callback);
 		},
-		push(data) {
-			if (!data) return
-			return db.get('category')
-				.push(data)
-				.write()
-				.id
+		//function(err, newDoc)
+		push(data, callback) {
+			categorys.insert(data, callback);
 		}
 	},
 	Bookmark: {

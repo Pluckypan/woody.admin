@@ -11,46 +11,17 @@
 		<div class="h-panel">
 			<div class="h-panel-bar"><span class="h-panel-title">添加分类</span></div>
 			<div class="h-panel-body">
-				<Form
-					:label-width="110"
-					mode="twocolumn"
-					:model="category"
-					:rules="validationRules"
-					ref="form"
-					showErrorTip
-				>
-					<FormItem label="父级分类" prop="pid" single>
-						<Select v-model="category.pid" :datas="cats"></Select>
-					</FormItem>
-					<FormItem label="名称" prop="name">
-						<input
-							type="text"
-							v-model="category.name"
-							placeholder="限制输入10个字"
-							v-wordlimit="10"
-						/>
-					</FormItem>
+				<Form :label-width="110" mode="twocolumn" :model="category" :rules="validationRules" ref="form" showErrorTip>
+					<FormItem label="父级分类" prop="pid" single><Select v-model="category.pid" :datas="cats"></Select></FormItem>
+					<FormItem label="名称" prop="name"><input type="text" v-model="category.name" placeholder="限制输入10个字" v-wordlimit="10" /></FormItem>
 					<FormItem label="编号" readonly>{{ category.id }}</FormItem>
-					<FormItem label="排序" prop="order">
-						<Slider v-model="category.order" :range="{ start: 0, end: 255 }"></Slider>
-					</FormItem>
+					<FormItem label="排序" prop="order"><Slider v-model="category.order" :range="{ start: 0, end: 255 }"></Slider></FormItem>
 					<FormItem readonly label="排序">{{ category.order }}</FormItem>
 					<FormItem label="日期" prop="create_time">
-						<DatePicker
-							placeholder="选择日期"
-							type="datetime"
-							format="YYYY/MM/DD HH:mm:ss"
-							v-model="category.create_time"
-						></DatePicker>
+						<DatePicker placeholder="选择日期" type="datetime" format="YYYY/MM/DD HH:mm:ss" v-model="category.create_time"></DatePicker>
 					</FormItem>
 					<FormItem label="备注" prop="desc" single>
-						<textarea
-							rows="3"
-							v-autosize
-							v-wordcount="50"
-							placeholder="添加一段描述"
-							v-model="category.desc"
-						></textarea>
+						<textarea rows="3" v-autosize v-wordcount="50" placeholder="添加一段描述" v-model="category.desc"></textarea>
 					</FormItem>
 					<FormItem single>
 						<Button color="primary" @click="save">保存</Button>
@@ -94,32 +65,36 @@ export default {
 	},
 	methods: {
 		clear() {
-			DB.Category.clearAll();
+			DB.Category.clearAll(function(err, numRemoved){
+				
+			});
 		},
 		submit() {
 			let that = this;
-			let _gist = Utils.getLocal('gist');
-			let _token = Utils.getLocal('token');
-			GH.Gist.auth(_token);
-			var jsonFile = {
-				files: {
-					'category.json': {
-						content: JSON.stringify(DB.Category.getAll())
+			DB.Category.getAll(function(err, docs) {
+				let _gist = Utils.getLocal('gist');
+				let _token = Utils.getLocal('token');
+				GH.Gist.auth(_token);
+				var jsonFile = {
+					files: {
+						'category.json': {
+							content: JSON.stringify(docs)
+						}
 					}
-				}
-			};
-			this.submitting = true;
-			GH.Gist.edit(_gist, jsonFile)
-				.then(function(response) {
-					if (response.status == 200) {
-						console.log(response.data);
-					}
-					that.submitting = false;
-				})
-				.catch(function(error) {
-					that.submitting = false;
-					console.log(error);
-				});
+				};
+				that.submitting = true;
+				GH.Gist.edit(_gist, jsonFile)
+					.then(function(response) {
+						if (response.status == 200) {
+							console.log(response.data);
+						}
+						that.submitting = false;
+					})
+					.catch(function(error) {
+						that.submitting = false;
+						console.log(error);
+					});
+			});
 		},
 		sync() {
 			let that = this;
@@ -143,17 +118,21 @@ export default {
 		save() {
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
-				this.$Message('验证成功');
-				const _id = DB.Category.push(Utils.copy(this.category));
-				this.reset()
-				console.log(_id);
+				this.$Message('保存成功');
+				const that = this;
+				DB.Category.push(Utils.copy(this.category), function(err, newDoc) {
+					that.reset();
+					console.log(newDoc);
+				});
 			}
 		},
 		read() {
-			const _all = DB.Category.getAll();
-			if (_all && _all.length) {
-				this.category.desc = _all.length;
-			}
+			const that = this;
+			DB.Category.getAll(function(err, docs) {
+				if (docs && docs.length) {
+					that.category.desc = docs.length;
+				}
+			});
 		},
 		reset() {
 			this.category.id = DB.IDMaker.gen();

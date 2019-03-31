@@ -124,22 +124,22 @@ export default {
 					.then(() => {
 						const newArr = this.datas.filter(item => selArr.indexOf(item) == -1);
 						this.datas = newArr;
-						DB.Category.removeArray(selArr);
+						DB.Category.removeArray(selArr, function(err, numRemoved) {
+							console.log(numRemoved);
+						});
 					})
-					.catch(() => {
-						
-					});
+					.catch(() => {});
 			}
 		},
 		remove(data) {
 			this.$Confirm('确定删除这条数据吗？', 'WOODY ADMIN')
 				.then(() => {
 					this.datas.pop(data);
-					DB.Category.remove(data);
+					DB.Category.remove(data, function(err, numRemoved) {
+						console.log(numRemoved);
+					});
 				})
-				.catch(() => {
-					
-				});
+				.catch(() => {});
 		},
 		getCounts() {
 			setTimeout(() => {
@@ -154,11 +154,14 @@ export default {
 				this.pagination.page = 1;
 			}
 			this.loading = true;
-			setTimeout(() => {
-				this.datas = DB.Category.getAll();
-				this.pagination.total = 100;
-				this.loading = false;
-			}, 1000);
+			const that=this
+			DB.Category.getAll(function(err, docs) {
+				console.log(err)
+				console.log(docs[0])
+				that.datas = docs;
+				that.pagination.total = 100;
+				that.loading = false;
+			});
 		}
 	},
 	computed: {}
