@@ -145,6 +145,7 @@ export default {
 			if (validResult.result) {
 				this.$Message('验证成功');
 				const _id = DB.Category.push(Utils.copy(this.category));
+				this.reset()
 				console.log(_id);
 			}
 		},

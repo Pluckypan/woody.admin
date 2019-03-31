@@ -11,12 +11,7 @@
 		<div class="h-panel-bar"><span class="h-panel-title">分类列表</span></div>
 		<div class="h-panel-body">
 			<div>
-				<Tabs
-					:datas="tabs"
-					className="common-status-filter-tabs"
-					v-model="type"
-					@change="getData(true)"
-				>
+				<Tabs :datas="tabs" className="common-status-filter-tabs" v-model="type" @change="getData(true)">
 					<template slot-scope="{ tab }" slot="item">
 						<p class="code">{{ counts[`${tab.key}`] || 0 }}</p>
 						<p class="name">{{ tab.title }}</p>
@@ -28,9 +23,7 @@
 					<Button icon="h-icon-inbox" color="primary" @click="addCategory">新建</Button>
 					<Button icon="h-icon-trash" color="primary" @click="removeSelect">删除</Button>
 				</ButtonGroup>
-				<div class="h-panel-right">
-					<Search @search="search" v-model="searchText1"></Search>
-				</div>
+				<div class="h-panel-right"><Search @search="search" v-model="searchText1"></Search></div>
 			</div>
 			<Table :loading="loading" :datas="datas" @select="onselect" ref="table" stripe checkbox>
 				<TableItem title="序号" :width="100">
@@ -46,12 +39,7 @@
 				<TableItem :width="200" title="描述">
 					<template slot-scope="{ data }">
 						<span class="text-hover" @click="open(data)">
-							<TextEllipsis
-								:text="data.desc"
-								:height="20"
-								v-width="100"
-								:useTooltip="false"
-							>
+							<TextEllipsis :text="data.desc" :height="20" v-width="100" :useTooltip="false">
 								<template slot="more">
 									<span>...</span>
 								</template>
@@ -73,14 +61,7 @@
 				</template>
 			</Table>
 			<p></p>
-			<Pagination
-				v-if="pagination.total > 0"
-				:size="pagination.size"
-				:cur="pagination.page"
-				align="right"
-				:total="pagination.total"
-				@change="changePage"
-			/>
+			<Pagination v-if="pagination.total > 0" :size="pagination.size" :cur="pagination.page" align="right" :total="pagination.total" @change="changePage" />
 		</div>
 	</div>
 </template>
@@ -132,21 +113,33 @@ export default {
 				this.$set(data, '_expand', !data._expand);
 			}
 		},
-		addCategory(){
-			this.$router.push({name: 'add_category'});
+		addCategory() {
+			this.$router.push({ name: 'add_category' });
 		},
 		removeSelect() {
-			const that=this
+			const that = this;
 			var selArr = this.$refs.table.getSelection();
 			if (selArr && selArr.length > 0) {
-				selArr.forEach(function(item, index) {
-					that.remove(item)
-				});
+				this.$Confirm('确定删除选中的数据吗？', 'WOODY ADMIN')
+					.then(() => {
+						const newArr = this.datas.filter(item => selArr.indexOf(item) == -1);
+						this.datas = newArr;
+						DB.Category.removeArray(selArr);
+					})
+					.catch(() => {
+						
+					});
 			}
 		},
 		remove(data) {
-			this.datas.pop(data);
-			DB.Category.remove(data);
+			this.$Confirm('确定删除这条数据吗？', 'WOODY ADMIN')
+				.then(() => {
+					this.datas.pop(data);
+					DB.Category.remove(data);
+				})
+				.catch(() => {
+					
+				});
 		},
 		getCounts() {
 			setTimeout(() => {

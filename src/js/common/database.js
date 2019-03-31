@@ -12,20 +12,29 @@ db.defaults({
 
 const Database = {
 	IDMaker: {
-		gen(){
+		gen() {
 			return shortid.generate()
 		}
 	},
 	Category: {
 		getAll() {
-			return db.get("category").value()
+			return db.get("category").cloneDeep().value()
 		},
-		clearAll(){
-		db.get("category").remove().write()
+		clearAll() {
+			db.get("category").remove().write()
 		},
-		remove(data){
+		remove(data) {
 			db.get("category").remove({
-				id:data.id
+				id: data.id
+			}).write()
+		},
+		removeArray(arr) {
+			const ids = arr.map(function(item) {
+				return item.id;
+			});
+			console.log(ids)
+			db.get("category").removeWhere(id:{
+				$in:ids
 			}).write()
 		},
 		push(data) {
