@@ -1,4 +1,5 @@
 const shortid = require('shortid')
+import manba from 'manba';
 shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&@');
 const Datastore = require('nedb');
 const categorys = new Datastore({
@@ -16,6 +17,28 @@ const Database = {
 		//function(err, docs)
 		getAll(callback) {
 			categorys.find({}, callback);
+		},
+		//function (err, count)
+		getAllCount(callback){
+			categorys.count({}, callback);
+		},
+		//function (err, count)
+		getThreeMonthCount(callback){
+			const min = manba().add(-3, manba.MONTH).format("f")
+			categorys.count({
+				create_time: {
+					$gte: min
+				}
+			}, callback);
+		},
+		//function(err, docs)
+		getThreeMonth(callback) {
+			const min = manba().add(-3, manba.MONTH).format("f")
+			categorys.find({
+				create_time: {
+					$gte: min
+				}
+			}, callback);
 		},
 		//function(err, numRemoved)
 		clearAll(callback) {
@@ -39,6 +62,8 @@ const Database = {
 				id: {
 					$in: ids
 				}
+			}, {
+				multi: true
 			}, callback);
 		},
 		//function(err, newDoc)

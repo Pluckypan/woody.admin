@@ -11,7 +11,7 @@
 		<div class="h-panel-bar"><span class="h-panel-title">分类列表</span></div>
 		<div class="h-panel-body">
 			<div>
-				<Tabs :datas="tabs" className="common-status-filter-tabs" v-model="type" @change="getData(true)">
+				<Tabs :datas="tabs" className="common-status-filter-tabs" v-model="type" @change="tabchange">
 					<template slot-scope="{ tab }" slot="item">
 						<p class="code">{{ counts[`${tab.key}`] || 0 }}</p>
 						<p class="name">{{ tab.title }}</p>
@@ -49,7 +49,7 @@
 				</TableItem>
 				<TableItem title="操作" :width="100">
 					<template slot-scope="{ data }">
-						<span class="text-hover" @click="remove(data)">删除</span>
+						<Poptip content="确定删除这条数据吗？" @confirm="remove(data)"><span class="text-hover">删除</span></Poptip>
 					</template>
 				</TableItem>
 				<template slot="expand" slot-scope="{ data }">
@@ -77,7 +77,10 @@ export default {
 			tabs: [{ key: 'all', title: '全部分类' }, { key: 'm3', title: '最近添加' }],
 			type: 'China',
 			datas: [],
-			counts: {},
+			counts: {
+				all: 0,
+				m3: 0
+			},
 			loading: false,
 			searchText1: null
 		};
@@ -88,7 +91,28 @@ export default {
 	methods: {
 		init() {
 			this.getData();
-			this.getCounts();
+			const that = this;
+			DB.Category.getThreeMonthCount(function (err, count) {
+				that.counts['m3'] = count?count:0;
+			});
+			DB.Category.getAllCount(function (err, count) {
+				that.counts['all'] = count?count:0;
+			});
+		},
+		tabchange(data) {
+			if (data.key == 'all') {
+				this.getData(true);
+			} else if (data.key == 'm3') {
+				this.loading = true;
+				const that = this;
+				DB.Category.getThreeMonth(function(err, docs) {
+					that.datas = docs;
+					const m3 = docs ? docs.length : 0;
+					that.pagination.total = m3;
+					that.counts['m3'] = m3;
+					that.loading = false;
+				});
+			}
 		},
 		search(data) {
 			this.$Message.info(`查询“${data}”`);
@@ -132,34 +156,25 @@ export default {
 			}
 		},
 		remove(data) {
-			this.$Confirm('确定删除这条数据吗？', 'WOODY ADMIN')
-				.then(() => {
-					this.datas.pop(data);
-					DB.Category.remove(data, function(err, numRemoved) {
-						console.log(numRemoved);
-					});
-				})
-				.catch(() => {});
-		},
-		getCounts() {
-			setTimeout(() => {
-				this.counts = {
-					all: 100,
-					m3: 10
-				};
-			}, 1000);
+			const that = this;
+			DB.Category.remove(data, function(err, numRemoved) {
+				console.log(numRemoved);
+				if (numRemoved && numRemoved > 0) {
+					that.datas = that.datas.filter(item => data.id != item.id);
+				}
+			});
 		},
 		getData(reload = false) {
 			if (reload) {
 				this.pagination.page = 1;
 			}
 			this.loading = true;
-			const that=this
+			const that = this;
 			DB.Category.getAll(function(err, docs) {
-				console.log(err)
-				console.log(docs[0])
 				that.datas = docs;
-				that.pagination.total = 100;
+				const all = docs ? docs.length : 0;
+				that.pagination.total = all;
+				that.counts['all'] = all;
 				that.loading = false;
 			});
 		}
