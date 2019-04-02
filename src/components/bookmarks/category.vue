@@ -9,7 +9,9 @@
 <template>
 	<div class="app-form frame-page basic-form-vue">
 		<div class="h-panel">
-			<div class="h-panel-bar"><span class="h-panel-title">添加分类</span></div>
+			<div class="h-panel-bar">
+				<span class="h-panel-title">{{ this.isEdit ? '编辑分类' : '添加分类' }}</span>
+			</div>
 			<div class="h-panel-body">
 				<Form :label-width="110" mode="twocolumn" :model="category" :rules="validationRules" ref="form" showErrorTip>
 					<FormItem label="父级分类" prop="pid" single><Select v-model="category.pid" :datas="cats"></Select></FormItem>
@@ -25,10 +27,6 @@
 					</FormItem>
 					<FormItem single>
 						<Button color="primary" @click="save">保存</Button>
-						&nbsp;&nbsp;&nbsp;
-						<Button color="primary" @click="read">读取</Button>
-						&nbsp;&nbsp;&nbsp;
-						<Button @click="clear">清空</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="reset">重置</Button>
 						&nbsp;&nbsp;&nbsp;
@@ -58,17 +56,36 @@ export default {
 			cats: [{ title: '根', key: 'root' }],
 			submitting: false,
 			syncing: false,
+			isEdit: false,
 			validationRules: {
 				required: ['pid', 'id', 'name', 'order', 'create_time']
 			}
 		};
 	},
-	methods: {
-		clear() {
-			DB.Category.clearAll(function(err, numRemoved){
-				
+	mounted() {
+		const cid = this.$route.query.id;
+		if (cid) {
+			const that=this
+			DB.Category.find(cid, function(err, doc) {
+				if (!doc || !doc.id) {
+					that.isEdit = false;
+					return;
+				}
+				that.category = {
+					pid: doc.pid,
+					id: doc.id,
+					name: doc.name,
+					desc: doc.desc,
+					order: doc.order,
+					create_time: doc.create_time
+				};
+				that.isEdit = true;
 			});
-		},
+		} else {
+			this.isEdit = false;
+		}
+	},
+	methods: {
 		submit() {
 			let that = this;
 			DB.Category.getAll(function(err, docs) {
@@ -120,19 +137,16 @@ export default {
 			if (validResult.result) {
 				this.$Message('保存成功');
 				const that = this;
-				DB.Category.push(Utils.copy(this.category), function(err, newDoc) {
-					that.reset();
-					console.log(newDoc);
-				});
-			}
-		},
-		read() {
-			const that = this;
-			DB.Category.getAll(function(err, docs) {
-				if (docs && docs.length) {
-					that.category.desc = docs.length;
+				if (that.isEdit == true) {
+					DB.Category.update(this.category, function(err, numReplaced) {
+						console.log(numReplaced);
+					});
+				} else {
+					DB.Category.push(Utils.copy(this.category), function(err, newDoc) {
+						that.reset();
+					});
 				}
-			});
+			}
 		},
 		reset() {
 			this.category.id = DB.IDMaker.gen();
@@ -141,6 +155,7 @@ export default {
 			this.category.name = '';
 			this.submitting = false;
 			this.syncing = false;
+			this.isEdit = false;
 			this.$refs.form.reset();
 		}
 	}

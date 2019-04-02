@@ -28,7 +28,7 @@ const menuConfig = [{
 		icon: 'icon-grid-2',
 		children: [{
 				title: '添加分类',
-				key: 'add_category'
+				key: 'category'
 			}, {
 				title: '分类列表',
 				key: 'categorys'

@@ -18,12 +18,16 @@ const Database = {
 		getAll(callback) {
 			categorys.find({}, callback);
 		},
+		//function (err, doc)
+		find(id,callback){
+			categorys.findOne({ id: id },  callback);
+		},
 		//function (err, count)
-		getAllCount(callback){
+		getAllCount(callback) {
 			categorys.count({}, callback);
 		},
 		//function (err, count)
-		getThreeMonthCount(callback){
+		getThreeMonthCount(callback) {
 			const min = manba().add(-3, manba.MONTH).format("f")
 			categorys.count({
 				create_time: {
@@ -69,6 +73,12 @@ const Database = {
 		//function(err, newDoc)
 		push(data, callback) {
 			categorys.insert(data, callback);
+		},
+		// function(err, numReplaced)
+		update(data, callback) {
+			categorys.update({
+				id: data.id
+			}, data, {}, callback);
 		}
 	},
 	Bookmark: {

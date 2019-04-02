@@ -49,9 +49,9 @@ const initRouter = () => {
 						title: '页面找不到'
 					}
 				}, {
-					path: '/add_category',
-					name: 'add_category',
-					component: (resolve) => require(['components/bookmarks/add_category'], resolve),
+					path: '/category',
+					name: 'category',
+					component: (resolve) => require(['components/bookmarks/category'], resolve),
 					meta: {
 						title: '添加分类'
 					}

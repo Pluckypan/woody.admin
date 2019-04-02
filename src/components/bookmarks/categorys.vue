@@ -50,6 +50,7 @@
 				<TableItem title="操作" :width="100">
 					<template slot-scope="{ data }">
 						<Poptip content="确定删除这条数据吗？" @confirm="remove(data)"><span class="text-hover">删除</span></Poptip>
+						<span class="text-hover" @click="editCategory(data)">编辑</span>
 					</template>
 				</TableItem>
 				<template slot="expand" slot-scope="{ data }">
@@ -92,11 +93,11 @@ export default {
 		init() {
 			this.getData();
 			const that = this;
-			DB.Category.getThreeMonthCount(function (err, count) {
-				that.counts['m3'] = count?count:0;
+			DB.Category.getThreeMonthCount(function(err, count) {
+				that.counts['m3'] = count ? count : 0;
 			});
-			DB.Category.getAllCount(function (err, count) {
-				that.counts['all'] = count?count:0;
+			DB.Category.getAllCount(function(err, count) {
+				that.counts['all'] = count ? count : 0;
 			});
 		},
 		tabchange(data) {
@@ -138,7 +139,10 @@ export default {
 			}
 		},
 		addCategory() {
-			this.$router.push({ name: 'add_category' });
+			this.$router.push({ name: 'category' });
+		},
+		editCategory(data) {
+			this.$router.push({ name: 'category', query: {id: data.id} });
 		},
 		removeSelect() {
 			const that = this;
