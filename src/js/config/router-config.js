@@ -53,7 +53,7 @@ const initRouter = () => {
 					name: 'category',
 					component: (resolve) => require(['components/bookmarks/category'], resolve),
 					meta: {
-						title: '添加分类'
+						title: '分类'
 					}
 				}, {
 					path: '/categorys',
@@ -67,7 +67,15 @@ const initRouter = () => {
 					name: 'bookmark',
 					component: (resolve) => require(['components/bookmarks/bookmark'], resolve),
 					meta: {
-						title: '分类'
+						title: '书签'
+					}
+				},
+				{
+					path: '/bookmarks',
+					name: 'bookmarks',
+					component: (resolve) => require(['components/bookmarks/bookmarks'], resolve),
+					meta: {
+						title: '书签列表'
 					}
 				},
 				...demoComponents,

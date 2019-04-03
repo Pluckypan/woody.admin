@@ -88,7 +88,7 @@ export default {
 	methods: {
 		submit() {
 			let that = this;
-			DB.Category.getAll(function(err, docs) {
+			DB.Category.getAll(null,function(err, docs) {
 				let _gist = Utils.getLocal('gist');
 				let _token = Utils.getLocal('token');
 				GH.Gist.auth(_token);
@@ -153,6 +153,8 @@ export default {
 			this.category.create_time = manba().format('f');
 			this.category.desc = '';
 			this.category.name = '';
+			this.category.pid = 'root';
+			this.category.order = 0;
 			this.submitting = false;
 			this.syncing = false;
 			this.isEdit = false;

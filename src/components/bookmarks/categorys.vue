@@ -102,7 +102,7 @@ export default {
 		},
 		tabchange(data) {
 			if (data.key == 'all') {
-				this.getData(true);
+				this.getData(null);
 			} else if (data.key == 'm3') {
 				this.loading = true;
 				const that = this;
@@ -116,7 +116,7 @@ export default {
 			}
 		},
 		search(data) {
-			this.$Message.info(`查询“${data}”`);
+			this.getData(data);
 		},
 		onselect(data, event) {
 			console.log(this.$refs.table.getSelection());
@@ -131,7 +131,7 @@ export default {
 		changePage(page) {
 			this.pagination.page = page.cur;
 			this.pagination.size = page.size;
-			this.getData();
+			this.getData(null);
 		},
 		open(data) {
 			if (data.desc && data.desc.length > 10) {
@@ -142,7 +142,7 @@ export default {
 			this.$router.push({ name: 'category' });
 		},
 		editCategory(data) {
-			this.$router.push({ name: 'category', query: {id: data.id} });
+			this.$router.push({ name: 'category', query: { id: data.id } });
 		},
 		removeSelect() {
 			const that = this;
@@ -168,17 +168,14 @@ export default {
 				}
 			});
 		},
-		getData(reload = false) {
-			if (reload) {
-				this.pagination.page = 1;
-			}
+		getData(nameFilter) {
+			this.pagination.page = 1;
 			this.loading = true;
 			const that = this;
-			DB.Category.getAll(function(err, docs) {
+			DB.Category.getAll(nameFilter, function(err, docs) {
 				that.datas = docs;
 				const all = docs ? docs.length : 0;
 				that.pagination.total = all;
-				that.counts['all'] = all;
 				that.loading = false;
 			});
 		}

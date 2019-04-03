@@ -15,12 +15,24 @@ const Database = {
 	},
 	Category: {
 		//function(err, docs)
-		getAll(callback) {
-			categorys.find({}, callback);
+		getAll(nameFilter, callback) {
+			var where = {};
+			if (nameFilter) {
+				where = {
+					name: {
+						$regex: eval("/" + nameFilter + "/")
+					}
+				}
+			}
+			categorys.find(where).sort({
+				create_time: -1
+			}).exec(callback);
 		},
 		//function (err, doc)
-		find(id,callback){
-			categorys.findOne({ id: id },  callback);
+		find(id, callback) {
+			categorys.findOne({
+				id: id
+			}, callback);
 		},
 		//function (err, count)
 		getAllCount(callback) {

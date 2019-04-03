@@ -34,8 +34,12 @@ const menuConfig = [{
 				key: 'categorys'
 			},
 			{
-				title: '书签',
+				title: '添加书签',
 				key: 'bookmark'
+			},
+			{
+				title: '书签列表',
+				key: 'bookmarks'
 			}
 		]
 	},
