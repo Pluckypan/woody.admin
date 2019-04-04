@@ -1,9 +1,17 @@
 const shortid = require('shortid')
 import manba from 'manba';
-shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&@');
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&=');
 const Datastore = require('nedb');
+const RootCat = {
+	title: '根',
+	key: 'root'
+};
 const categorys = new Datastore({
 	filename: 'category',
+	autoload: true
+});
+const bookmarks = new Datastore({
+	filename: 'bookmark',
 	autoload: true
 });
 
@@ -91,10 +99,38 @@ const Database = {
 			categorys.update({
 				id: data.id
 			}, data, {}, callback);
+		},
+		// function(err, cats)
+		findCats(callback) {
+			categorys.find({}).sort({
+				create_time: -1
+			}).exec(function(err, docs) {
+				if (docs && docs.length > 0) {
+					const arr = docs.map(function(item) {
+						return {
+							title: item.name,
+							key: item.id
+						};
+					});
+					const cats = [RootCat].concat(arr);
+					callback(0, cats)
+				} else {
+					callback(err, [RootCat])
+				}
+			});
 		}
 	},
 	Bookmark: {
-
+		//function(err, newDoc)
+		push(data, callback) {
+			bookmarks.insert(data, callback);
+		},
+		//function(err, docs)
+		getAll(where, callback) {
+			bookmarks.find(where).sort({
+				create_time: -1
+			}).exec(callback);
+		},
 	}
 };
 

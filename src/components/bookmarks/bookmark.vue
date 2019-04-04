@@ -18,14 +18,13 @@
 					<FormItem label="名称" prop="name"><input type="text" v-model="bookmark.name" placeholder="限制输入10个字" v-wordlimit="10" /></FormItem>
 					<FormItem label="编号" readonly>{{ bookmark.id }}</FormItem>
 					<FormItem label="链接" prop="url"><input type="text" v-model="bookmark.url" /></FormItem>
-					<FormItem label="热门" readonly>
-						<Checkbox v-model="bookmark.hot"></Checkbox>
-					</FormItem>
+					<FormItem label="热门" readonly><Checkbox v-model="bookmark.hot"></Checkbox></FormItem>
 					<FormItem label="排序" prop="order"><Slider v-model="bookmark.order" :range="{ start: 0, end: 255 }"></Slider></FormItem>
 					<FormItem readonly label="排序">{{ bookmark.order }}</FormItem>
 					<FormItem label="日期" prop="create_time">
 						<DatePicker placeholder="选择日期" type="datetime" format="YYYY/MM/DD HH:mm:ss" v-model="bookmark.create_time"></DatePicker>
 					</FormItem>
+					<FormItem label="标签" prop="tag"><TagInput v-model="bookmark.tag"></TagInput></FormItem>
 					<FormItem label="备注" prop="desc" single>
 						<textarea rows="3" v-autosize v-wordcount="50" placeholder="添加一段描述" v-model="bookmark.desc"></textarea>
 					</FormItem>
@@ -50,7 +49,7 @@ export default {
 				id: DB.IDMaker.gen(),
 				name: '',
 				desc: '',
-				tag: '',
+				tag: [],
 				hot: false,
 				url: '',
 				order: 0,
@@ -59,18 +58,22 @@ export default {
 			cats: [{ title: '根', key: 'root' }],
 			isEdit: false,
 			validationRules: {
-				required: ['cid', 'id', 'name', 'url', 'order', 'create_time']
+				required: ['cid', 'id', 'name', 'url', 'order', 'create_time'],
+				url: ['url']
 			}
 		};
 	},
 	mounted() {
 		const cid = this.$route.query.id;
+		const that = this;
 		if (cid) {
-			const that = this;
 			that.isEdit = true;
 		} else {
-			this.isEdit = false;
+			that.isEdit = false;
 		}
+		DB.Category.findCats(function(err, cats) {
+			that.cats = cats;
+		});
 	},
 	methods: {
 		save() {
@@ -80,6 +83,9 @@ export default {
 				const that = this;
 				if (that.isEdit == true) {
 				} else {
+					DB.Bookmark.push(Utils.copy(this.bookmark), function(err, newDoc) {
+						that.reset();
+					});
 				}
 			}
 		},
@@ -90,6 +96,7 @@ export default {
 			this.bookmark.cid = 'root';
 			this.bookmark.name = '';
 			this.bookmark.url = '';
+			this.bookmark.tag = [];
 			this.bookmark.order = 0;
 			this.isEdit = false;
 			this.$refs.form.reset();
