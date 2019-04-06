@@ -78,6 +78,14 @@ const initRouter = () => {
 						title: '书签列表'
 					}
 				},
+								{
+					path: '/tree',
+					name: 'tree',
+					component: (resolve) => require(['components/bookmarks/tree'], resolve),
+					meta: {
+						title: '书签列表'
+					}
+				},
 				...demoComponents,
 				{
 					path: '*',

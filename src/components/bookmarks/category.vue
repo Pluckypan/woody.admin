@@ -22,11 +22,12 @@
 					<FormItem label="日期" prop="create_time">
 						<DatePicker placeholder="选择日期" type="datetime" format="YYYY/MM/DD HH:mm:ss" v-model="category.create_time"></DatePicker>
 					</FormItem>
+					<FormItem label="常用" readonly><Checkbox v-model="category.hot"></Checkbox></FormItem>
 					<FormItem label="备注" prop="desc" single>
 						<textarea rows="3" v-autosize v-wordcount="50" placeholder="添加一段描述" v-model="category.desc"></textarea>
 					</FormItem>
 					<FormItem single>
-						<Button color="primary" @click="save">保存</Button>
+						<Button color="primary" @click="save">{{ this.isEdit ? '更新' : '保存' }}</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="reset">重置</Button>
 						&nbsp;&nbsp;&nbsp;
@@ -51,6 +52,7 @@ export default {
 				name: '',
 				desc: '',
 				order: 0,
+				hot: false,
 				create_time: manba().format('f')
 			},
 			cats: [{ title: '根', key: 'root' }],
@@ -65,7 +67,7 @@ export default {
 	mounted() {
 		const cid = this.$route.query.id;
 		if (cid) {
-			const that=this
+			const that = this;
 			DB.Category.find(cid, function(err, doc) {
 				if (!doc || !doc.id) {
 					that.isEdit = false;
@@ -77,6 +79,7 @@ export default {
 					name: doc.name,
 					desc: doc.desc,
 					order: doc.order,
+					hot: doc.hot,
 					create_time: doc.create_time
 				};
 				that.isEdit = true;
@@ -88,7 +91,7 @@ export default {
 	methods: {
 		submit() {
 			let that = this;
-			DB.Category.getAll(null,function(err, docs) {
+			DB.Category.getAll(null, function(err, docs) {
 				let _gist = Utils.getLocal('gist');
 				let _token = Utils.getLocal('token');
 				GH.Gist.auth(_token);
@@ -154,6 +157,7 @@ export default {
 			this.category.desc = '';
 			this.category.name = '';
 			this.category.pid = 'root';
+			this.category.hot = false;
 			this.category.order = 0;
 			this.submitting = false;
 			this.syncing = false;

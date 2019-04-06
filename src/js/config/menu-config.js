@@ -5,27 +5,13 @@ const menuConfig = [{
 		count: 1
 	},
 	{
-		title: 'Icons',
-		key: 'icons',
-		icon: 'icon-heart'
-	},
-	{
-		title: '列表应用',
-		key: 'tablelist',
-		icon: 'icon-grid-2',
-		children: [{
-				title: '基础表格',
-				key: 'tableBasic'
-			},
-			{
-				title: '查询列表',
-				key: 'tableSearch'
-			}
-		]
+		title: '我的书签',
+		key: 'tree',
+		icon: 'icon-ribbon'
 	}, {
-		title: '书签管理',
+		title: '管理书签',
 		key: 'woody',
-		icon: 'icon-grid-2',
+		icon: 'icon-book',
 		children: [{
 				title: '添加分类',
 				key: 'category'
@@ -40,24 +26,6 @@ const menuConfig = [{
 			{
 				title: '书签列表',
 				key: 'bookmarks'
-			}
-		]
-	},
-	{
-		title: '表单应用',
-		key: 'form-folder',
-		icon: 'icon-paper',
-		children: [{
-				title: '基础表单',
-				key: 'form'
-			},
-			{
-				title: '表单详情',
-				key: 'formDetail'
-			},
-			{
-				title: '模糊匹配',
-				key: 'autocomplete2'
 			}
 		]
 	},

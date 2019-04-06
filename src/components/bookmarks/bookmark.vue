@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 .basic-form-vue {
 	.h-panel-body {
 		padding-right: 60px;
@@ -15,10 +15,10 @@
 			<div class="h-panel-body">
 				<Form :label-width="110" mode="twocolumn" :model="bookmark" :rules="validationRules" ref="form" showErrorTip>
 					<FormItem label="分类" prop="cid" single><Select v-model="bookmark.cid" :datas="cats"></Select></FormItem>
-					<FormItem label="名称" prop="name"><input type="text" v-model="bookmark.name" placeholder="限制输入10个字" v-wordlimit="10" /></FormItem>
+					<FormItem label="名称" prop="name"><input type="text" v-model="bookmark.name" placeholder="限制输入10个字" v-wordlimit="50" /></FormItem>
 					<FormItem label="编号" readonly>{{ bookmark.id }}</FormItem>
 					<FormItem label="链接" prop="url"><input type="text" v-model="bookmark.url" /></FormItem>
-					<FormItem label="热门" readonly><Checkbox v-model="bookmark.hot"></Checkbox></FormItem>
+					<FormItem label="常用" readonly><Checkbox v-model="bookmark.hot"></Checkbox></FormItem>
 					<FormItem label="排序" prop="order"><Slider v-model="bookmark.order" :range="{ start: 0, end: 255 }"></Slider></FormItem>
 					<FormItem readonly label="排序">{{ bookmark.order }}</FormItem>
 					<FormItem label="日期" prop="create_time">
@@ -26,12 +26,14 @@
 					</FormItem>
 					<FormItem label="标签" prop="tag"><TagInput v-model="bookmark.tag"></TagInput></FormItem>
 					<FormItem label="备注" prop="desc" single>
-						<textarea rows="3" v-autosize v-wordcount="50" placeholder="添加一段描述" v-model="bookmark.desc"></textarea>
+						<textarea rows="3" v-autosize v-wordcount="100" placeholder="添加一段描述" v-model="bookmark.desc"></textarea>
 					</FormItem>
 					<FormItem single>
-						<Button color="primary" @click="save">保存</Button>
+						<Button color="primary" @click="save">{{ this.isEdit ? '更新' : '保存' }}</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="reset">重置</Button>
+						&nbsp;&nbsp;&nbsp;
+						<Button @click="del" v-if="this.isEdit">删除</Button>
 					</FormItem>
 				</Form>
 			</div>
@@ -68,6 +70,19 @@ export default {
 		const that = this;
 		if (cid) {
 			that.isEdit = true;
+			DB.Bookmark.find(cid, function(err, doc) {
+				that.bookmark = {
+					cid: doc.cid,
+					id: doc.id,
+					name: doc.name,
+					desc: doc.desc,
+					tag: doc.tag,
+					hot: doc.hot,
+					url: doc.url,
+					order: doc.order,
+					create_time: doc.create_time
+				};
+			});
 		} else {
 			that.isEdit = false;
 		}
@@ -79,11 +94,16 @@ export default {
 		save() {
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
-				this.$Message('保存成功');
 				const that = this;
 				if (that.isEdit == true) {
+					DB.Bookmark.update(this.bookmark, function(err, numReplaced) {
+						if(numReplaced&&numReplaced>0){
+							that.$Message('更新成功');
+						}
+					});
 				} else {
 					DB.Bookmark.push(Utils.copy(this.bookmark), function(err, newDoc) {
+						that.$Message('保存成功');
 						that.reset();
 					});
 				}
@@ -100,6 +120,12 @@ export default {
 			this.bookmark.order = 0;
 			this.isEdit = false;
 			this.$refs.form.reset();
+		},
+		del() {
+			const that = this;
+			DB.Bookmark.remove(this.bookmark, function(err, numRemoved) {
+				that.reset();
+			});
 		}
 	}
 };

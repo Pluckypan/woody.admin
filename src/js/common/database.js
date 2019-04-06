@@ -36,6 +36,12 @@ const Database = {
 				create_time: -1
 			}).exec(callback);
 		},
+		//function(err, docs)
+		search(where = {}, limit = -1, callback) {
+			categorys.find(where).sort({
+				create_time: -1
+			}).limit(limit).exec(callback);
+		},
 		//function (err, doc)
 		find(id, callback) {
 			categorys.findOne({
@@ -130,6 +136,38 @@ const Database = {
 			bookmarks.find(where).sort({
 				create_time: -1
 			}).exec(callback);
+		},
+		//function (err, doc)
+		find(id, callback) {
+			bookmarks.findOne({
+				id: id
+			}, callback);
+		},
+		//function(err, numRemoved)
+		remove(data, callback) {
+			bookmarks.remove({
+				id: data.id
+			}, {}, callback);
+		},
+		//function(err, numRemoved)
+		removeArray(arr, callback) {
+			const ids = arr.map(function(item) {
+				return item.id;
+			});
+			console.log(ids)
+			bookmarks.remove({
+				id: {
+					$in: ids
+				}
+			}, {
+				multi: true
+			}, callback);
+		},
+		// function(err, numReplaced)
+		update(data, callback) {
+			bookmarks.update({
+				id: data.id
+			}, data, {}, callback);
 		},
 	}
 };

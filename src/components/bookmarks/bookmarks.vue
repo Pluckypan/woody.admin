@@ -1,13 +1,12 @@
-<style lang="less"></style>
+<style lang="less" scoped></style>
 <template>
 	<div class="search-list-vue frame-page h-panel">
 		<div class="h-panel-bar"><span class="h-panel-title">书签列表</span></div>
 		<div class="h-panel-bar">
 			<div class="search-picker">
-				<SearchFilter v-model="params" :datas="dicts.type" prop="type" title="类型"></SearchFilter>
-				<SearchFilter v-model="params" :datas="dicts.location" prop="location" multiple title="地点"></SearchFilter>
-				<SearchFilter v-model="params" :datas="dicts.salary" prop="salary" range title="金额"></SearchFilter>
-				<SearchFilter v-model="params" :datas="dicts.year" prop="year" range title="时间"></SearchFilter>
+				<SearchFilter v-model="params" :datas="dicts.category" prop="category" title="分类"></SearchFilter>
+				<SearchFilter v-model="params" :datas="dicts.tags" prop="tags" multiple title="标签"></SearchFilter>
+				<SearchFilter v-model="params" :datas="dicts.time" prop="time" title="时间"></SearchFilter>
 			</div>
 		</div>
 		<div class="h-panel-body">
@@ -18,32 +17,19 @@
 	</div>
 </template>
 <script>
+import manba from 'manba';
 export default {
 	data() {
 		return {
 			dicts: {
-				type: [{ key: 1, title: '类型一' }, { key: 2, title: '类型二' }, { key: 3, title: '类型三' }, { key: 4, title: '类型四' }, { key: 5, title: '类型五' }],
-				location: [
-					{ key: '001', title: '上海' },
-					{ key: '002', title: '杭州' },
-					{ key: '003', title: '北京' },
-					{ key: '004', title: '广州' },
-					{ key: '005', title: '深圳' }
-				],
-				salary: [
-					{ key: '10', title: '10万以下', max: 10, min: 0 },
-					{ key: '20', title: '10-20万', max: 20, min: 10 },
-					{ key: '30', title: '20-30万', max: 30, min: 20 },
-					{ key: '40', title: '30-40万', max: 40, min: 30 },
-					{ key: '50', title: '50-100万', max: 100, min: 50 },
-					{ key: '100', title: '100万以上', max: null, min: 100 }
-				],
-				year: [
-					{ key: '1', title: '1年以下', max: 1, min: 0 },
-					{ key: '3', title: '1-3年', max: 3, min: 1 },
-					{ key: '5', title: '3-5年', max: 5, min: 3 },
-					{ key: '10', title: '5-10年', max: 10, min: 5 },
-					{ key: '100', title: '10年以上', max: 100, min: 10 }
+				category: [],
+				tags: [],
+				time: [
+					{ key: '7', title: '1个星期内' },
+					{ key: '30', title: '1个月' },
+					{ key: '180', title: '6月' },
+					{ key: '360', title: '1年内' },
+					{ key: '361', title: '1年以上' }
 				]
 			},
 			pagination: {
@@ -54,25 +40,49 @@ export default {
 			datas: [],
 			loading: false,
 			params: {
-				location: [],
-				type: null,
-				year: {
-					max: null,
-					min: null
-				},
-				salary: {
-					max: null,
-					min: null
-				}
+				tags: [],
+				category: null,
+				time: null
 			}
 		};
 	},
 	mounted() {
+		const that = this;
+		DB.Category.search({}, 10, function(err, docs) {
+			if (docs && docs.length > 0) {
+				that.dicts.category = docs.map(function(item) {
+					return {
+						key: item.id,
+						title: item.name
+					};
+				});
+			}
+		});
 		this.init();
 	},
 	watch: {
 		params() {
-			this.getData();
+			var where = {};
+			if (this.params.time) {
+				if (this.params.time == 361) {
+					where.create_time = {
+						$gte: manba()
+							.add(1, manba.YEAR)
+							.format('f')
+					};
+				} else {
+					where.create_time = {
+						$lte: manba()
+							.add(this.params.time, manba.DAY)
+							.format('f')
+					};
+				}
+			}
+			if (this.params.category) {
+				where.category = this.params.category;
+			}
+			this.getData(where);
+			console.log(where);
 		}
 	},
 	methods: {
@@ -84,11 +94,11 @@ export default {
 		init() {
 			this.getData();
 		},
-		getData(reload = false) {
+		getData(where = {}) {
 			const that = this;
 			that.pagination.page = 1;
 			that.loading = true;
-			DB.Bookmark.getAll({}, function(err, docs) {
+			DB.Bookmark.getAll(where, function(err, docs) {
 				that.datas = docs;
 				that.pagination.total = docs ? docs.length : 0;
 				that.loading = false;
