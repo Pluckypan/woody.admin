@@ -58,6 +58,9 @@ export default {
 				});
 			}
 		});
+		DB.Bookmark.findTags(10, function(err, tags) {
+			console.log(tags);
+		});
 		this.init();
 	},
 	watch: {
@@ -79,7 +82,7 @@ export default {
 				}
 			}
 			if (this.params.category) {
-				where.category = this.params.category;
+				where.cid = this.params.category;
 			}
 			this.getData(where);
 			console.log(where);

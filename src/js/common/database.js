@@ -15,6 +15,14 @@ const bookmarks = new Datastore({
 	autoload: true
 });
 
+function sortObjectKeys(obj) {
+	var tmp = {};
+	Object.keys(obj).sort().forEach(function(k) {
+		tmp[k] = obj[k]
+	});
+	return tmp;
+}
+
 const Database = {
 	IDMaker: {
 		gen() {
@@ -169,6 +177,31 @@ const Database = {
 				id: data.id
 			}, data, {}, callback);
 		},
+		findTags(limit, callback) {
+			bookmarks.find({}).sort({
+				create_time: -1
+			}).exec(function(err, docs) {
+				if (docs && docs.length > 0) {
+					const tmp = docs.filter(function(item) {
+						return item.tag && item.tag.length > 0;
+					}).map(function(item) {
+						return item.tag
+					})
+					const obj = [].concat.apply([], tmp).reduce((pre, cur) => {
+						if (cur in pre) {
+							pre[cur]++
+						} else {
+							pre[cur] = 1
+						}
+						return pre
+					}, {});
+					const tags = sortObjectKeys(obj);
+					callback(0, tags)
+				} else {
+					callback(err, [])
+				}
+			});
+		}
 	}
 };
 
