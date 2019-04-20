@@ -202,6 +202,17 @@ const Database = {
 				}
 			});
 		}
+	},
+	//callback(cats,books)
+	getAll(callback) {
+		let that = this
+		that.Category.getAll(null, function(err0, cats) {
+			let iCats = (!err0 && cats && cats.length > 0) ? cats : [];
+			that.Bookmark.getAll({}, function(err1, bookmarks) {
+				let iBooks = (!err1 && bookmarks && bookmarks.length > 0) ? bookmarks : [];
+				callback(iCats, iBooks)
+			})
+		})
 	}
 };
 

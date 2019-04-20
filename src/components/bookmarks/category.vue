@@ -30,10 +30,6 @@
 						<Button color="primary" @click="save">{{ this.isEdit ? '更新' : '保存' }}</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="reset">重置</Button>
-						&nbsp;&nbsp;&nbsp;
-						<Button color="primary" :loading="submitting" @click="submit">提交</Button>
-						&nbsp;&nbsp;&nbsp;
-						<Button color="primary" :loading="syncing" @click="sync">同步</Button>
 					</FormItem>
 				</Form>
 			</div>
@@ -56,8 +52,6 @@ export default {
 				create_time: manba().format('f')
 			},
 			cats: [{ title: '根', key: 'root' }],
-			submitting: false,
-			syncing: false,
 			isEdit: false,
 			validationRules: {
 				required: ['pid', 'id', 'name', 'order', 'create_time']
@@ -89,52 +83,6 @@ export default {
 		}
 	},
 	methods: {
-		submit() {
-			let that = this;
-			DB.Category.getAll(null, function(err, docs) {
-				let _gist = Utils.getLocal('gist');
-				let _token = Utils.getLocal('token');
-				GH.Gist.auth(_token);
-				var jsonFile = {
-					files: {
-						'category.json': {
-							content: JSON.stringify(docs)
-						}
-					}
-				};
-				that.submitting = true;
-				GH.Gist.edit(_gist, jsonFile)
-					.then(function(response) {
-						if (response.status == 200) {
-							console.log(response.data);
-						}
-						that.submitting = false;
-					})
-					.catch(function(error) {
-						that.submitting = false;
-						console.log(error);
-					});
-			});
-		},
-		sync() {
-			let that = this;
-			let _gist = Utils.getLocal('gist');
-			let _token = Utils.getLocal('token');
-			GH.Gist.auth(_token);
-			this.syncing = true;
-			GH.Gist.get(_gist)
-				.then(function(response) {
-					if (response.status == 200) {
-						console.log(response.data);
-					}
-					that.syncing = false;
-				})
-				.catch(function(error) {
-					that.syncing = false;
-					//console.log(error);
-					that.$Message.error('提交失败');
-				});
-		},
 		save() {
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
