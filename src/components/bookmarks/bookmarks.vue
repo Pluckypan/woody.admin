@@ -59,7 +59,12 @@ export default {
 			}
 		});
 		DB.Bookmark.findTags(10, function(err, tags) {
-			console.log(tags);
+			that.dicts.tags = tags.map(function(item) {
+				return {
+					key: item.key,
+					title: item.key
+				};
+			});
 		});
 		this.init();
 	},
@@ -84,8 +89,13 @@ export default {
 			if (this.params.category) {
 				where.cid = this.params.category;
 			}
+			let iTags = this.params.tags;
+			if (iTags && iTags.length > 0) {
+				where.tag = {
+					$in: iTags
+				};
+			}
 			this.getData(where);
-			console.log(where);
 		}
 	},
 	methods: {

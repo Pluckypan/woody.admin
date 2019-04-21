@@ -16,9 +16,12 @@ const bookmarks = new Datastore({
 });
 
 function sortObjectKeys(obj) {
-	var tmp = {};
+	var tmp = [];
 	Object.keys(obj).sort().forEach(function(k) {
-		tmp[k] = obj[k]
+		tmp.push({
+			key: k,
+			num: obj[k]
+		})
 	});
 	return tmp;
 }
@@ -196,7 +199,7 @@ const Database = {
 						return pre
 					}, {});
 					const tags = sortObjectKeys(obj);
-					callback(0, tags)
+					callback(0, tags.slice(0,limit))
 				} else {
 					callback(err, [])
 				}
