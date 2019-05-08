@@ -59,9 +59,9 @@ export default {
 		};
 	},
 	mounted() {
+		const that = this;
 		const cid = this.$route.query.id;
 		if (cid) {
-			const that = this;
 			DB.Category.find(cid, function(err, doc) {
 				if (!doc || !doc.id) {
 					that.isEdit = false;
@@ -81,6 +81,9 @@ export default {
 		} else {
 			this.isEdit = false;
 		}
+		DB.Category.findCats(function(err, cats) {
+			that.cats = cats;
+		});
 	},
 	methods: {
 		save() {
