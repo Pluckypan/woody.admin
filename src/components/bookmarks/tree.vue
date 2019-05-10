@@ -4,6 +4,21 @@
 		.h-tree-show-desc {
 			display: none;
 		}
+		.h-tree-show-expand {
+			display: none;
+		}
+		.h-tree-item-bookmark {
+			margin-left: 0.875rem;
+			display: inline-block;
+			vertical-align: -1px;
+		}
+		.h-tree-item-category {
+			height: 1px;
+			width: 14px;
+			background: rgba(0, 0, 0, 0.65);
+			display: inline-block;
+			vertical-align: 3px;
+		}
 		.tree-show-custom {
 			display: inline;
 			.tree-show-title {
@@ -40,6 +55,7 @@
 		<div class="h-panel-body tree4-demo-vue">
 			<Tree :option="param" ref="demo" :filterable="false" selectOnClick className="h-tree-theme-row-selected" @open="open" @select="select" @choose="choose">
 				<template slot="item" slot-scope="{ item }">
+					<span><i :class="item.expIcon"></i></span>
 					<div class="tree-show-custom">
 						<span :class="item.treeIcon"></span>
 						<span class="tree-show-title" v-if="!item.editing">{{ item.name }}</span>
@@ -63,26 +79,20 @@ export default {
 		return {
 			param: {
 				keyName: 'id',
-				parentName: 'pid',
+				// parentName: 'pid',
 				titleName: 'name',
 				dataMode: 'list',
 				// datas: [],
 				getDatas: (parent, resolve) => {
-					if(!parent){
-						let that = this;
-						that.getData(null, function(arr) {
-							resolve(arr);
-						});
-					}else{
-						
-					}
+					let that = this;
+					that.getData(parent, function(arr) {
+						resolve(arr);
+					});
 				}
 			}
 		};
 	},
-	mounted() {
-		
-	},
+	mounted() {},
 	methods: {
 		edit(item) {
 			this.$set(item, 'editValue', item.name);
@@ -116,22 +126,58 @@ export default {
 		foldAll() {
 			this.$refs.demo.foldAll();
 		},
-		getData(nameFilter, callback) {
+		getData(parent, callback) {
 			const that = this;
-			DB.Category.getAll(nameFilter, function(err, docs) {
+			console.log(parent ? 'id=' + parent.id + ' isCat=' + parent.isCat : null);
+			if (!parent || parent.isCat == true) {
+				that.getCategory(parent, function(arr) {
+					if (arr && arr.length > 0) {
+						callback(arr);
+					} else {
+						that.getBookmark(parent.id, callback);
+					}
+				});
+			} else {
+				callback([]);
+			}
+		},
+		getBookmark(cid, callback) {
+			let where = {
+				cid: cid
+			};
+			const that = this;
+			DB.Bookmark.getAll(where, function(err, docs) {
+				let arr = [];
+				if (docs && docs.length > 0) {
+					arr = docs.map(function(item) {
+						item.treeIcon = 'icon-ribbon';
+						item.expIcon = 'h-tree-item-bookmark';
+						item.isCat = false;
+						return item;
+					});
+				}
+				callback(arr);
+			});
+		},
+		getCategory(parent, callback) {
+			let where = {
+				pid: parent ? parent.id : 'root'
+			};
+			const that = this;
+			DB.Category.search(where, 0, function(err, docs) {
 				let arr = [];
 				if (docs && docs.length > 0) {
 					arr = docs.map(function(item) {
 						item.treeIcon = 'icon-book';
+						item.expIcon = 'h-tree-item-category';
+						item.isCat = true;
 						return item;
 					});
-				} else {
-					arr.push({
-						id: 'root',
-						title: 'root'
-					});
 				}
-				callback(arr);
+				let cid = parent ? parent.id : 'root';
+				that.getBookmark(cid, function(arrB) {
+					callback(arr.concat(arrB));
+				});
 			});
 		}
 	}

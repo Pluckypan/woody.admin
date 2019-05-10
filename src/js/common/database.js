@@ -48,7 +48,7 @@ const Database = {
 			}).exec(callback);
 		},
 		//function(err, docs)
-		search(where = {}, limit = -1, callback) {
+		search(where = {}, limit = 0, callback) {
 			categorys.find(where).sort({
 				create_time: -1
 			}).limit(limit).exec(callback);
