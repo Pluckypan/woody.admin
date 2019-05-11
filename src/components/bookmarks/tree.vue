@@ -1,5 +1,6 @@
 <style lang="less">
 .tree4-demo-vue {
+	min-height: 580px;
 	.h-tree-show {
 		.h-tree-show-desc {
 			display: none;
@@ -46,6 +47,14 @@
 			}
 		}
 	}
+	.divider {
+		border-top: 1px dashed #e8e8e8;
+		display: block;
+		height: 0px;
+		width: 100%;
+		margin: 12px 0;
+		clear: both;
+	}
 }
 </style>
 
@@ -53,21 +62,42 @@
 	<div class="table-basic-vue frame-page h-panel">
 		<div class="h-panel-bar"><span class="h-panel-title">我的书签</span></div>
 		<div class="h-panel-body tree4-demo-vue">
-			<Tree :option="param" ref="demo" :filterable="false" selectOnClick className="h-tree-theme-row-selected" @open="open" @select="select" @choose="choose">
-				<template slot="item" slot-scope="{ item }">
-					<span><i :class="item.expIcon"></i></span>
-					<div class="tree-show-custom">
-						<span :class="item.treeIcon"></span>
-						<span class="tree-show-title" v-if="!item.editing">{{ item.name }}</span>
-						<input v-else type="text" v-model="item.editValue" @blur="updateValue(item)" @keyup.enter="updateValue(item)" />
-						<span class="tree-edit-part" v-if="!item.editing">
-							<!-- <i class="h-icon-plus" @click.stop="append(item)"></i>
-							<i class="h-icon-edit" @click.stop="edit(item)"></i>
-							<i class="h-icon-trash" @click.stop="remove(item)"></i> -->
-						</span>
-					</div>
-				</template>
-			</Tree>
+			<Row>
+				<Cell :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
+					<Tree :option="param" ref="demo" :filterable="false" selectOnClick className="h-tree-theme-row-selected" @open="open" @select="select" @choose="choose">
+						<template slot="item" slot-scope="{ item }">
+							<span><i :class="item.expIcon"></i></span>
+							<div class="tree-show-custom">
+								<span :class="item.treeIcon"></span>
+								<span class="tree-show-title" v-if="!item.editing">{{ item.name }}</span>
+								<input v-else type="text" v-model="item.editValue" @blur="updateValue(item)" @keyup.enter="updateValue(item)" />
+								<span class="tree-edit-part" v-if="!item.editing">
+									<!-- <i class="h-icon-plus" @click.stop="append(item)"></i>
+										<i class="h-icon-edit" @click.stop="edit(item)"></i>
+										<i class="h-icon-trash" @click.stop="remove(item)"></i> -->
+								</span>
+							</div>
+						</template>
+					</Tree>
+				</Cell>
+				<Cell :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
+					<Form :readonly="true" v-if="selectItem != null&&selectItem.isCat==true">
+						<FormItem label="编码">{{ selectItem.id }}</FormItem>
+						<FormItem label="名称">{{ selectItem.name }}</FormItem>
+						<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
+						<FormItem label="备注" v-if="selectItem.desc&&selectItem.desc.length>0">{{ selectItem.desc }}</FormItem>
+					</Form>
+					<Form :readonly="true" v-if="selectItem != null&&selectItem.isCat==false">
+						<FormItem label="编码">{{ selectItem.id }}</FormItem>
+						<FormItem label="名称">{{ selectItem.name }}</FormItem>
+						<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
+						<FormItem label="链接"><a :href="selectItem.url" target="_blank">{{selectItem.url}}</a></FormItem>
+						<FormItem label="备注" v-if="selectItem.desc&&selectItem.desc.length>0">{{ selectItem.desc }}</FormItem>
+						<div class="divider" style="margin-left: 40px;" v-if="selectItem.tag&&selectItem.tag.length>0"></div>
+						<FormItem label="标签" v-if="selectItem.tag&&selectItem.tag.length>0"><TagInput v-model="selectItem.tag" style="width: 100%" :readonly="true"></TagInput></FormItem>
+					</Form>
+				</Cell>
+			</Row>
 		</div>
 	</div>
 </template>
@@ -89,7 +119,8 @@ export default {
 						resolve(arr);
 					});
 				}
-			}
+			},
+			selectItem: null
 		};
 	},
 	mounted() {},
@@ -108,14 +139,21 @@ export default {
 		remove(item) {
 			this.$refs.demo.removeTreeItem(item.id);
 		},
-		choose(data) {
-			//log(data);
-		},
+		choose(data) {},
 		select(data) {
-			//log(data);
+			this.selectItem = data;
 		},
 		open(data) {
-			//log(data);
+			data.isOpen = !data.isOpen;
+			if (!data.isCat) return;
+			if (data.expIcon == 'h-icon-angle-right' || data.expIcon == 'h-icon-angle-down') {
+				log(data.isOpen);
+				if (data.isOpen) {
+					data.expIcon = 'h-icon-angle-right';
+				} else {
+					data.expIcon = 'h-icon-angle-down';
+				}
+			}
 		},
 		expand(ids) {
 			this.$refs.demo.expand(ids);
@@ -133,7 +171,13 @@ export default {
 				that.getCategory(parent, function(arr) {
 					if (arr && arr.length > 0) {
 						callback(arr);
+						if (parent) {
+							parent.expIcon = 'h-icon-angle-down';
+						}
 					} else {
+						if (parent) {
+							parent.expIcon = 'h-tree-item-bookmark';
+						}
 						that.getBookmark(parent.id, callback);
 					}
 				});
@@ -168,8 +212,8 @@ export default {
 				let arr = [];
 				if (docs && docs.length > 0) {
 					arr = docs.map(function(item) {
-						item.treeIcon = 'icon-book';
-						item.expIcon = 'h-tree-item-category';
+						item.treeIcon = 'icon-folder';
+						item.expIcon = 'h-icon-angle-right';
 						item.isCat = true;
 						return item;
 					});
