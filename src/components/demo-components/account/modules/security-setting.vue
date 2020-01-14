@@ -1,53 +1,70 @@
-<style lang='less'>
+<style lang="less">
 .security-setting-vue {
-
 }
 </style>
 <template>
-  <div class="security-setting-vue">
-    <div class="subframe-title">安全设置</div>
-    <div class="common-list-container">
-      <div class="common-list-item">
-        <div class="common-list-meta">
-          <p class="font-bold"><i class="icon-head"></i> 帐号密码</p>
-          <p>更新当前帐号密码</p>
-        </div>
-        <div class="common-list-action"><Button>修改</Button></div>
-      </div>
-      <div class="common-list-item">
-        <div class="common-list-meta">
-          <p class="font-bold"><i class="icon-microphone"></i> 绑定手机</p>
-          <p>设置您的绑定手机号码</p>
-        </div>
-        <div class="common-list-action"><Button>修改</Button></div>
-      </div>
-      <div class="common-list-item">
-        <div class="common-list-meta">
-          <p class="font-bold"><i class="icon-mail"></i> 绑定邮箱</p>
-          <p>设置您的绑定邮箱</p>
-        </div>
-        <div class="common-list-action"><Button>修改</Button></div>
-      </div>
-    </div>
-  </div>
+	<div class="security-setting-vue">
+		<div class="subframe-title">系统设置</div>
+		<div class="common-list-container">
+			<div class="common-list-item">
+				<div class="common-list-meta">
+					<p class="font-bold">
+						<i class="icon-head"></i>
+						同步书签数据
+					</p>
+					<p>自动拉取数据异常的情况下,可手动从 Gist 同步书签数据</p>
+				</div>
+				<div class="common-list-action">
+					<Button @click="sync"><i :class="syncing ? 'h-icon-spinner' : ''"></i>更新书签</Button>
+				</div>
+			</div>
+			<div class="common-list-item">
+				<div class="common-list-meta">
+					<p class="font-bold">
+						<i class="icon-microphone"></i>
+						提交书签数据
+					</p>
+					<p>在提交书签异常的情况下,可手动提交本地数据至 Gist.一般建议先拉取再提交.</p>
+				</div>
+				<div class="common-list-action">
+					<Button @click="submit"><i :class="submiting ? 'h-icon-spinner' : ''"></i>提交书签</Button>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 <script>
 export default {
-  data() {
-    return {
-      
-    }
-  },
-  mounted() {
-    this.init()
-  },
-  methods: {
-    init() {
-      
-    }
-  },
-  computed: {
-    
-  }
-}
+	data() {
+		return {
+			syncing: false,
+			submiting: false
+		};
+	},
+	mounted() {
+		this.init();
+	},
+	methods: {
+		init() {},
+		sync() {
+			let that = this;
+			if (that.syncing) return;
+			that.syncing = true;
+			Runner.sync(function(err, data) {
+				that.syncing = false;
+				console.log(data);
+			});
+		},
+		submit() {
+			let that = this;
+			if (that.submiting) return;
+			that.submiting = true;
+			Runner.submit(function(err, data) {
+				that.submiting = false;
+				console.log(data);
+			});
+		}
+	},
+	computed: {}
+};
 </script>

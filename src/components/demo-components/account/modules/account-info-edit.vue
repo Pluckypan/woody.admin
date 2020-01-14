@@ -22,12 +22,6 @@
       <FormItem label="公司" prop="org">
         <input type="text" v-model="acc.org"/>
       </FormItem>
-      <FormItem label="部门" prop="dept">
-        <input type="text" v-model="acc.dept"/>
-      </FormItem>
-      <FormItem label="职位" prop="title">
-        <input type="text" v-model="acc.title"/>
-      </FormItem>
       <FormItem label="地址" prop="location">
         <input type="text" v-model="acc.location"/>
       </FormItem>

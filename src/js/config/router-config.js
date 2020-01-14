@@ -103,9 +103,9 @@ const initRouter = () => {
 	router.beforeEach((to, from, next) => {
 		HeyUI.$LoadingBar.start();
 		if (to.meta && to.meta.title) {
-			document.title = to.meta.title + ' - 管理应用';
+			document.title = to.meta.title + ' - 控制台';
 		} else {
-			document.title = '管理系统';
+			document.title = 'Woody Admin';
 		}
 		next();
 	})

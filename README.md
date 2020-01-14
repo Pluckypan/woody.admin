@@ -28,3 +28,12 @@ woody-admin 是Woody网页版后台管理系统.基于 [![HEYUI VUE](https://img
 
 <span style="color: red">Woody 简洁大气、安全可靠的书签管理工具 基于Gist+Chrome</span>
 
+## 运行
+```
+$ hey dev
+```
+
+## 发布
+```
+$ hey build
+```

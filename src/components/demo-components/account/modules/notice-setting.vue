@@ -5,7 +5,7 @@
 </style>
 <template>
   <div class="notice-setting-vue">
-    <div class="subframe-title">通知设置</div>
+    <div class="subframe-title">系统设置</div>
     <div class="common-list-container">
       <div class="common-list-item">
         <div class="common-list-meta">

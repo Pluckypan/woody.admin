@@ -2,7 +2,7 @@ const menuConfig = [{
 		title: 'Dashboard',
 		key: 'Home',
 		icon: 'icon-monitor',
-		count: 1
+		count: 0
 	},
 	{
 		title: '我的书签',
@@ -34,14 +34,12 @@ const menuConfig = [{
 		key: 'sys-setting',
 		icon: 'icon-cog',
 		children: [{
-				title: '个人中心',
-				key: 'accountBasic'
-			},
-			{
-				title: '安全设置',
-				key: 'securitySetting'
-			}
-		]
+			title: '系统设置',
+			key: 'securitySetting'
+		}, {
+			title: '个人中心',
+			key: 'accountBasic'
+		}]
 	}
 ];
 

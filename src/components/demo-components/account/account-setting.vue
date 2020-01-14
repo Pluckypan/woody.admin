@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       menus: [{
-        title: '安全设置',
+        title: '系统设置',
         key: 'securitySetting'
       }, {
         title: '通知设置',

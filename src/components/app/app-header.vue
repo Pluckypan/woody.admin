@@ -93,14 +93,8 @@
 		</div>
 		<div class="float-right app-header-info">
 			<AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="globalSearch" placeholder="全局搜索.."></AutoComplete>
-			<div class="app-header-icon-item" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal"><i class="icon-content-left"></i></div>
-			<appHeaderMessage></appHeaderMessage>
-			<div class="app-header-icon-item" v-tooltip content="更新书签" theme="white" @click="sync" :disabled="true">
-				<i :class="syncing ? 'h-icon-spinner' : 'h-icon-inbox'"></i>
-			</div>
-			<div class="app-header-icon-item" v-tooltip content="提交书签" :disabled="true" theme="white" @click="submit">
-				<i :class="submiting ? 'h-icon-spinner' : 'h-icon-outbox'"></i>
-			</div>
+			<div class="app-header-icon-item" style="display: none;" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal"><i class="icon-content-left"></i></div>
+			<appHeaderMessage style="display: none;"></appHeaderMessage>
 			<div class="app-header-icon-item" v-tooltip content="说明文档" theme="white" @click="goGithub"><i class="h-icon-help"></i></div>
 			<DropdownMenu className="app-header-dropdown" trigger="hover" offset="0 5" :width="150" placement="bottom-end" :datas="infoMenu" @onclick="trigger">
 				<span>{{ User.name }}</span>
@@ -119,9 +113,7 @@ export default {
 	data() {
 		return {
 			searchText: '',
-			infoMenu: [{ key: 'info', title: '个人信息', icon: 'h-icon-user' }, { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }],
-			syncing: false,
-			submiting: false
+			infoMenu: [{ key: 'info', title: '个人信息', icon: 'h-icon-user' }, { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }]
 		};
 	},
 	computed: {
@@ -138,24 +130,6 @@ export default {
 	methods: {
 		goGithub() {
 			window.open('https://github.com/Pluckypan/woody.admin');
-		},
-		sync() {
-			let that = this;
-			if (that.syncing) return;
-			that.syncing = true;
-			Runner.sync(function(err, data) {
-				that.syncing = false;
-				console.log(data);
-			});
-		},
-		submit() {
-			let that = this;
-			if (that.submiting) return;
-			that.submiting = true;
-			Runner.submit(function(err, data) {
-				that.submiting = false;
-				console.log(data);
-			});
 		},
 		trigger(data) {
 			if (data == 'logout') {
