@@ -119,7 +119,7 @@ export default {
 			this.getData(data);
 		},
 		onselect(data, event) {
-			console.log(this.$refs.table.getSelection());
+			//console.log(this.$refs.table.getSelection());
 		},
 		shortString(str) {
 			if (str && str.length > 10) {

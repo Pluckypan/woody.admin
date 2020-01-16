@@ -92,9 +92,13 @@
 			<Button :icon="siderCollapsed ? 'icon-align-right' : 'icon-align-left'" size="l" noBorder class="font20" @click="siderCollapsed = !siderCollapsed"></Button>
 		</div>
 		<div class="float-right app-header-info">
-			<AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="globalSearch" placeholder="全局搜索.."></AutoComplete>
-			<div class="app-header-icon-item" style="display: none;" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal"><i class="icon-content-left"></i></div>
-			<appHeaderMessage style="display: none;"></appHeaderMessage>
+			<AutoComplete :showDropdownWhenNoResult="false" v-model="searchText" config="woodySearch" placeholder="全局搜索.."
+				@change="triggerSearch" type="title">
+			</AutoComplete>
+			<div class="app-header-icon-item" style="display: none;" v-tooltip content="系统布局配置" theme="white" @click="showSettingModal">
+				<i class="icon-content-left"></i>
+			</div>
+
 			<div class="app-header-icon-item" v-tooltip content="说明文档" theme="white" @click="goGithub"><i class="h-icon-help"></i></div>
 			<DropdownMenu className="app-header-dropdown" trigger="hover" offset="0 5" :width="150" placement="bottom-end" :datas="infoMenu" @onclick="trigger">
 				<span>{{ User.name }}</span>
@@ -104,12 +108,9 @@
 </template>
 <script>
 import { mapState } from 'vuex';
-import appHeaderMessage from './modules/app-header-message';
 
 export default {
-	components: {
-		appHeaderMessage
-	},
+	components: {},
 	data() {
 		return {
 			searchText: '',
@@ -130,6 +131,11 @@ export default {
 	methods: {
 		goGithub() {
 			window.open('https://github.com/Pluckypan/woody.admin');
+		},
+		triggerSearch(data, type) {
+			if (type == 'enter' || type == 'picker') {
+				this.$router.push({ name: 'bookmark', query: { id: data.value.id } });
+			}
 		},
 		trigger(data) {
 			if (data == 'logout') {

@@ -5,10 +5,10 @@
 <template>
   <div class="account-vue frame-page">
     <Row :space="30">
-      <Col :xs='24' :sm='24' :md='7' :lg='7' :xl='7'>
+      <Col :xs='24' :sm='24' :md='10' :lg='10' :xl='10'>
         <AccountInfoShow :account="account"></AccountInfoShow>
       </Col>
-      <Col :xs='24' :sm='24' :md='17' :lg='17' :xl='17'>
+      <Col :xs='24' :sm='24' :md='14' :lg='14' :xl='14'>
         <div class="h-panel">
           <div class="h-panel-tabs-bar">
             <Tabs v-model="tab" :datas="tabs"></Tabs>

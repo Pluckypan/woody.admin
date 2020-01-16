@@ -199,7 +199,7 @@ const Database = {
 						return pre
 					}, {});
 					const tags = sortObjectKeys(obj);
-					callback(0, tags.slice(0,limit))
+					callback(0, tags.slice(0, limit))
 				} else {
 					callback(err, [])
 				}
@@ -208,10 +208,18 @@ const Database = {
 	},
 	//callback(cats,books)
 	getAll(callback) {
+		this.searchAll(null, callback)
+	},
+	searchAll(keyword, callback) {
 		let that = this
-		that.Category.getAll(null, function(err0, cats) {
+		that.Category.getAll(keyword, function(err0, cats) {
 			let iCats = (!err0 && cats && cats.length > 0) ? cats : [];
-			that.Bookmark.getAll({}, function(err1, bookmarks) {
+			let where = keyword != null && keyword.length > 0 ? {
+				name: {
+					$regex: eval("/" + keyword + "/")
+				}
+			} : {};
+			that.Bookmark.getAll(where, function(err1, bookmarks) {
 				let iBooks = (!err1 && bookmarks && bookmarks.length > 0) ? bookmarks : [];
 				callback(iCats, iBooks)
 			})
