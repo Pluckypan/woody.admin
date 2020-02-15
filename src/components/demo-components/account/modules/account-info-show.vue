@@ -58,7 +58,6 @@
       <div class="account-detail-desc">
         <p><i class="icon-mail"></i><span>{{account.id}}</span></p>
         <p><i class="icon-briefcase"></i><span><a :href="account.html_url" target="_blank">{{account.html_url}}</a></span></p>
-        <p><i class="icon-location-2"></i><span>Admin = {{account.site_admin}}</span></p>
       </div>
     </div>
   </div>

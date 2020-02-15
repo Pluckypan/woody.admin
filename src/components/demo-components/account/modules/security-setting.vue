@@ -70,7 +70,7 @@ export default {
 					console.log('提交出错:' + err);
 					that.$Message(`提交出错`);
 				} else {
-					console.log(data);
+					that.$Message(`提交成功.`);
 				}
 			});
 		}
