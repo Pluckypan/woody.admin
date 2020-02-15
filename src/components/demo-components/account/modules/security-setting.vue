@@ -53,8 +53,10 @@ export default {
 			Runner.sync(function(err, data) {
 				that.syncing = false;
 				if (err) {
-					that.$Message(`同步出错“${err}”`);
+					console.log('同步出错:' + err);
+					that.$Message(`同步出错`);
 				} else {
+					console.log(data);
 				}
 			});
 		},
@@ -65,7 +67,8 @@ export default {
 			Runner.submit(function(err, data) {
 				that.submiting = false;
 				if (err) {
-					this.$Message(`跳转至关键词“${this.keyword}”的搜索`);
+					console.log('提交出错:' + err);
+					that.$Message(`提交出错`);
 				} else {
 					console.log(data);
 				}

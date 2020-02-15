@@ -177,8 +177,10 @@ export default {
 					} else {
 						if (parent) {
 							parent.expIcon = 'h-tree-item-bookmark';
+							that.getBookmark(parent.id, callback);
+						}else{
+							callback([]);
 						}
-						that.getBookmark(parent.id, callback);
 					}
 				});
 			} else {

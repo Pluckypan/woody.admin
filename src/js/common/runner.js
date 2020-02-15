@@ -4,6 +4,11 @@ const Runner = {
 	sync(callback) {
 		let _gist = Utils.getLocal('gist');
 		let _token = Utils.getLocal('token');
+		console.log("gist =" + _gist);
+		if (_gist == null || _gist == "null" || _token == null || _token == "null") {
+			callback(-2, "invalid token");
+			return;
+		}
 		GH.Gist.auth(_token);
 		GH.Gist.get(_gist)
 			.then(function(response) {
@@ -14,10 +19,11 @@ const Runner = {
 					iCats = Utils.isArray(iCats) ? iCats : []
 					let bookmark = files['bookmark.json']
 					let iBooks = (bookmark && bookmark.content) ? Utils.safeParse(bookmark.content) : [];
-					iBooks = Utils.isArray(iBooks) ? iBooks : []
+					iBooks = Utils.isArray(iBooks) ? iBooks : [];
 					callback(0, {
 						category: iCats,
-						bookmark: iBooks
+						bookmark: iBooks,
+						owner: response.data.owner
 					})
 				} else {
 					callback(1, response.status)
@@ -32,6 +38,11 @@ const Runner = {
 		DB.getAll(function(cats, bookmarks) {
 			let _gist = Utils.getLocal('gist');
 			let _token = Utils.getLocal('token');
+			console.log("gist =" + _gist);
+			if (_gist == null || _gist == "null" || _token == null || _token == "null") {
+				callback(-2, "invalid token");
+				return;
+			}
 			GH.Gist.auth(_token);
 			var jsonFile = {
 				files: {

@@ -7,11 +7,12 @@ Mock.setup({
 Mock.mock('/api/account/info', "get", {
   "status": 200,
   "body": {
-    name: 'plucky',
-    desc: 'Make it Happen & Take it Easy',
+    name: 'Plucky',
+    desc: 'pluckypan',
     email: 'plucky@echo.engineer',
     org: 'echo',
     dept: 'design',
+	homepage:'http://1991th.com',
     title: 'engineer',
     location: 'China',
     tags: ['good', 'nice', 'brilliant']

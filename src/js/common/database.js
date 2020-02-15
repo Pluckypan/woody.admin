@@ -6,12 +6,18 @@ const RootCat = {
 	title: '根',
 	key: 'root'
 };
+const _gist = Utils.getLocal('gist');
 const categorys = new Datastore({
-	filename: 'category',
+	filename: _gist + '_category',
 	autoload: true
 });
 const bookmarks = new Datastore({
-	filename: 'bookmark',
+	filename: _gist + '_bookmark',
+	autoload: true
+});
+
+const user = new Datastore({
+	filename: _gist + '_user',
 	autoload: true
 });
 
@@ -31,6 +37,12 @@ const Database = {
 		gen() {
 			return shortid.generate()
 		}
+	},
+	User: {
+		//function(err, newDoc)
+		push(data, callback) {
+			user.insert(data, callback);
+		},
 	},
 	Category: {
 		//function(err, docs)

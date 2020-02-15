@@ -88,22 +88,9 @@
 		<div class="login-container">
 			<div class="login-content">
 				<div class="login-title">Woody Admin</div>
-				<div class="login-name">
-					<input type="text" v-model="login.gist" placeholder="Gist" />
-				</div>
-				<div class="login-password">
-					<input
-						type="password"
-						v-model="login.token"
-						placeholder="Token"
-						@keyup.enter="submit"
-					/>
-				</div>
-				<div class="buttonDiv">
-					<Button :loading="loading" block color="primary" size="l" @click="submit">
-						Sign in
-					</Button>
-				</div>
+				<div class="login-name"><input type="text" v-model="login.gist" placeholder="Gist" /></div>
+				<div class="login-password"><input type="password" v-model="login.token" placeholder="Token" @keyup.enter="submit" /></div>
+				<div class="buttonDiv"><Button :loading="loading" block color="primary" size="l" @click="submit">Sign in</Button></div>
 			</div>
 			<p class="copyright">
 				Copyright © 2019 Woody. -
@@ -124,14 +111,30 @@ export default {
 	},
 	methods: {
 		submit() {
+			var gist = this.login.gist;
+			var token = this.login.token;
+			if (!gist || gist.length == 0) {
+				this.$Message(`Gist require.`);
+				return;
+			}
+			if (!token || token.length == 0) {
+				this.$Message(`Token require.`);
+				return;
+			}
 			this.loading = true;
-			R.Login.login(Login.dispose(this.login)).then(resp => {
-				if (resp.ok) {
-					Utils.saveLocal('gist', this.login.gist);
-					Utils.saveLocal('token', this.login.token);
-					this.$router.replace('/');
+			let that = this;
+			Utils.saveLocal('gist', gist);
+			Utils.saveLocal('token', token);
+			Runner.sync(function(err, data) {
+				that.loading = false;
+				if (err) {
+					that.$Message(`Login Failed.` + err + ' ' + data);
+				} else {
+					DB.User.push(data.owner);
+					DB.Category.push(data.category);
+					DB.Bookmark.push(data.bookmark);
+					that.$router.replace('/');
 				}
-				this.loading = false;
 			});
 		}
 	}

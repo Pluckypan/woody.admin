@@ -57,15 +57,8 @@
       <p class="account-desc"><pre>{{account.desc}}</pre></p>
       <div class="account-detail-desc">
         <p><i class="icon-mail"></i><span>{{account.email}}</span></p>
-        <p><i class="icon-briefcase"></i><span>{{account.org}} · {{account.dept}} · {{account.title}}</span></p>
+        <p><i class="icon-briefcase"></i><span><a :href="account.homepage" target="_blank">{{account.homepage}}</a></span></p>
         <p><i class="icon-location-2"></i><span>{{account.location}}</span></p>
-      </div>
-      <div class="divider"></div>
-      <div>
-        <p class="account-detail-tags-title">标签</p>
-        <p>
-          <TagInput v-model="account.tags" style="width: 100%" :readonly="true"></TagInput>
-        </p>
       </div>
     </div>
   </div>
