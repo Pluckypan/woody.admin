@@ -3,6 +3,7 @@ import Ajax from './ajax';
 const Request = {
   User: {
     info(){
+		console.log("xxxyyy");
       return Ajax.get('/account/info');
     }
   },

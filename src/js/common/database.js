@@ -43,6 +43,15 @@ const Database = {
 		push(data, callback) {
 			user.insert(data, callback);
 		},
+		clearAll(callback) {
+			user.remove({}, {
+				multi: true
+			}, callback);
+		},
+		// function (err, user)
+		getCurrent(callback){
+			user.findOne({}, callback);
+		}
 	},
 	Category: {
 		//function(err, docs)
@@ -183,6 +192,11 @@ const Database = {
 					$in: ids
 				}
 			}, {
+				multi: true
+			}, callback);
+		},
+		clearAll(callback) {
+			bookmarks.remove({}, {
 				multi: true
 			}, callback);
 		},

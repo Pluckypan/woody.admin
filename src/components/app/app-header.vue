@@ -101,7 +101,7 @@
 
 			<div class="app-header-icon-item" v-tooltip content="说明文档" theme="white" @click="goGithub"><i class="h-icon-help"></i></div>
 			<DropdownMenu className="app-header-dropdown" trigger="hover" offset="0 5" :width="150" placement="bottom-end" :datas="infoMenu" @onclick="trigger">
-				<span>{{ User.name }}</span>
+				<span>{{ User.login }}</span>
 			</DropdownMenu>
 		</div>
 	</div>
@@ -139,7 +139,11 @@ export default {
 		},
 		trigger(data) {
 			if (data == 'logout') {
-				Utils.removeLocal('Auth');
+				Utils.removeLocal('gist');
+				Utils.removeLocal('token');
+				DB.User.clearAll();
+				DB.Bookmark.clearAll();
+				DB.Category.clearAll();
 				this.$router.replace({ name: 'login' });
 			} else {
 				this.$router.push({ name: 'accountBasic' });

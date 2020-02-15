@@ -46,11 +46,7 @@ export default {
 		init() {},
 		save() {
 			if (!this.$refs.form.valid().result) return;
-			this.saveloading = true;
-			setTimeout(() => {
-				this.saveloading = false;
-				store.dispatch('updateAccount', Utils.copy(this.acc));
-			}, 1000);
+
 		},
 		reset() {
 			this.$refs.form.reset();

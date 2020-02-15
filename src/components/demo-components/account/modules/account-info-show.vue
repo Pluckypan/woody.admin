@@ -51,14 +51,14 @@
   <div class="h-panel account-info-show-vue">
     <div class="h-panel-body">
       <p class="account-image">
-        <Avatar :src="account.avatar" :width="100"></Avatar>
+        <Avatar :src="account.avatar_url" :width="100"></Avatar>
       </p>
-      <p class="account-name">{{account.name}}</p>
-      <p class="account-desc"><pre>{{account.desc}}</pre></p>
+      <p class="account-name">{{account.login}}</p>
+      <p class="account-desc"><pre>{{account.type}}</pre></p>
       <div class="account-detail-desc">
-        <p><i class="icon-mail"></i><span>{{account.email}}</span></p>
-        <p><i class="icon-briefcase"></i><span><a :href="account.homepage" target="_blank">{{account.homepage}}</a></span></p>
-        <p><i class="icon-location-2"></i><span>{{account.location}}</span></p>
+        <p><i class="icon-mail"></i><span>{{account.id}}</span></p>
+        <p><i class="icon-briefcase"></i><span><a :href="account.html_url" target="_blank">{{account.html_url}}</a></span></p>
+        <p><i class="icon-location-2"></i><span>Admin = {{account.site_admin}}</span></p>
       </div>
     </div>
   </div>
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     init() {
-      
+      console.log(this.account);
     }
   },
   computed: {
