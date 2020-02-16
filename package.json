@@ -31,15 +31,15 @@
 		"lodash.debounce": "^4.0.8",
 		"manba": "^1.2.8",
 		"marked": "^0.6.2",
+		"nedb": "^1.8.0",
 		"plupload-es6": "^2.1.11",
 		"qiniu-js-es6": "^1.0.31",
 		"qs": "^6.4.0",
+		"shortid": "^2.2.14",
 		"vue": "^2.5.16",
 		"vue-router": "^2.5.3",
 		"vuex": "^2.3.1",
-		"wangeditor": "^3.1.1",
-		"nedb": "^1.8.0",
-		"shortid": "^2.2.14"
+		"wangeditor": "^3.1.1"
 	},
 	"devDependencies": {
 		"@vue/eslint-config-standard": "^4.0.0",

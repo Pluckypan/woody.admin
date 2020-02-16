@@ -21,6 +21,9 @@ export default {
         title: '系统设置',
         key: 'securitySetting'
       }, {
+        title: '导入设置',
+        key: 'importSetting'
+      }, {
         title: '通知设置',
         key: 'noticeSetting'
       }]
