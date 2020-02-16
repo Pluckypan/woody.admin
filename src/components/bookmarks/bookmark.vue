@@ -34,6 +34,8 @@
 						<Button @click="reset">重置</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="del" v-if="this.isEdit">删除</Button>
+						&nbsp;&nbsp;&nbsp;
+						<Button @click="open" v-if="this.isEdit">打开</Button>
 					</FormItem>
 				</Form>
 			</div>
@@ -71,6 +73,9 @@ export default {
 		if (cid) {
 			that.isEdit = true;
 			DB.Bookmark.find(cid, function(err, doc) {
+				if (!doc) {
+					return;
+				}
 				that.bookmark = {
 					cid: doc.cid,
 					id: doc.id,
@@ -91,13 +96,16 @@ export default {
 		});
 	},
 	methods: {
+		open() {
+			window.open(this.bookmark.url);
+		},
 		save() {
 			let validResult = this.$refs.form.valid();
 			if (validResult.result) {
 				const that = this;
 				if (that.isEdit == true) {
 					DB.Bookmark.update(this.bookmark, function(err, numReplaced) {
-						if(numReplaced&&numReplaced>0){
+						if (numReplaced && numReplaced > 0) {
 							that.$Message('更新成功');
 						}
 					});

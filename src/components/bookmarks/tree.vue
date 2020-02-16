@@ -92,6 +92,10 @@
 							<FormItem label="名称">{{ selectItem.name }}</FormItem>
 							<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
 							<FormItem label="备注" v-if="selectItem.desc && selectItem.desc.length > 0">{{ selectItem.desc }}</FormItem>
+							<FormItem>
+								<Button color="primary" @click="editCat(selectItem.id)">编辑</Button>
+								<Button @click="deleteCat(selectItem)">删除</Button>
+							</FormItem>
 						</Form>
 						<Form :readonly="true" v-if="selectItem != null && selectItem.isCat == false">
 							<FormItem label="编码">{{ selectItem.id }}</FormItem>
@@ -104,6 +108,10 @@
 							<div class="divider" style="margin-left: 40px;" v-if="selectItem.tag && selectItem.tag.length > 0"></div>
 							<FormItem label="标签" v-if="selectItem.tag && selectItem.tag.length > 0">
 								<TagInput v-model="selectItem.tag" style="width: 100%" :readonly="true"></TagInput>
+							</FormItem>
+							<FormItem>
+								<Button color="primary" @click="editBookmark(selectItem.id)">编辑</Button>
+								<Button @click="deleteBookmark(selectItem)">删除</Button>
 							</FormItem>
 						</Form>
 					</div>
@@ -136,6 +144,28 @@ export default {
 	},
 	mounted() {},
 	methods: {
+		editBookmark(id) {
+			this.$router.push({ name: 'bookmark', query: { id: id } });
+		},
+		deleteBookmark(data) {
+			const that = this;
+			DB.Bookmark.remove(data, function(err, numRemoved) {
+				if (numRemoved && numRemoved > 0) {
+					that.$Message('删除成功');
+				}
+			});
+		},
+		editCat(id) {
+			this.$router.push({ name: 'category', query: { id: id } });
+		},
+		deleteCat(data) {
+			const that = this;
+			DB.Category.remove(data, function(err, numRemoved) {
+				if (numRemoved && numRemoved > 0) {
+					that.$Message('删除成功');
+				}
+			});
+		},
 		edit(item) {
 			this.$set(item, 'editValue', item.name);
 			this.$set(item, 'editing', true);
