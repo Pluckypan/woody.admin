@@ -38,6 +38,7 @@ export default {
 				total: 0
 			},
 			datas: [],
+			allDatas: [],
 			loading: false,
 			params: {
 				tags: [],
@@ -102,7 +103,9 @@ export default {
 		changePage(page) {
 			this.pagination.page = page.cur;
 			this.pagination.size = page.size;
-			this.getData();
+			let start = (page.cur - 1) * 20;
+			let end = start + page.size;
+			this.datas = this.allDatas.slice(start, end);
 		},
 		init() {
 			this.getData();
@@ -112,9 +115,13 @@ export default {
 			that.pagination.page = 1;
 			that.loading = true;
 			DB.Bookmark.getAll(where, function(err, docs) {
-				that.datas = docs;
+				that.allDatas = docs;
 				that.pagination.total = docs ? docs.length : 0;
 				that.loading = false;
+				that.changePage({
+					cur: 1,
+					size: 20
+				});
 			});
 		}
 	},

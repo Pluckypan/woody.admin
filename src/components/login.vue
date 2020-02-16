@@ -105,11 +105,18 @@ import Login from 'model/login/Login';
 export default {
 	data() {
 		return {
-			login: Login.parse({}),
+			login: {},
 			loading: false
 		};
 	},
+	mounted() {
+		this.init();
+	},
 	methods: {
+		init() {
+			this.login.gist = Utils.getLocal('gist');
+			this.login.token = Utils.getLocal('token');
+		},
 		submit() {
 			var gist = this.login.gist;
 			var token = this.login.token;

@@ -9,7 +9,7 @@
 			<div class="common-list-item">
 				<div class="common-list-meta">
 					<p class="font-bold">Voblet</p>
-					<input type="password" v-model="vobletToken" placeholder="请输入Voblet授权码" />
+					<input type="text" v-model="vobletToken" placeholder="请输入Voblet授权码" />
 				</div>
 				<div class="common-list-action">
 					<Button @click="sync">

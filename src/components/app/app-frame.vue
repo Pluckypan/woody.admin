@@ -50,6 +50,10 @@ export default {
 				if (!err && user) {
 					store.dispatch('updateAccount', user);
 					that.initDict();
+				}else{
+					that.loading = false;
+					that.$Loading.close();
+					that.$router.replace({ name: 'login' });
 				}
 			});
 		},

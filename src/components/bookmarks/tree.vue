@@ -55,6 +55,11 @@
 		margin: 12px 0;
 		clear: both;
 	}
+	.right-fixed-container {
+		top: 180px;
+		position: fixed;
+		padding-left: 20px;
+	}
 }
 </style>
 
@@ -81,21 +86,27 @@
 					</Tree>
 				</Cell>
 				<Cell :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
-					<Form :readonly="true" v-if="selectItem != null&&selectItem.isCat==true">
-						<FormItem label="编码">{{ selectItem.id }}</FormItem>
-						<FormItem label="名称">{{ selectItem.name }}</FormItem>
-						<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
-						<FormItem label="备注" v-if="selectItem.desc&&selectItem.desc.length>0">{{ selectItem.desc }}</FormItem>
-					</Form>
-					<Form :readonly="true" v-if="selectItem != null&&selectItem.isCat==false">
-						<FormItem label="编码">{{ selectItem.id }}</FormItem>
-						<FormItem label="名称">{{ selectItem.name }}</FormItem>
-						<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
-						<FormItem label="链接"><a :href="selectItem.url" target="_blank">{{selectItem.url}}</a></FormItem>
-						<FormItem label="备注" v-if="selectItem.desc&&selectItem.desc.length>0">{{ selectItem.desc }}</FormItem>
-						<div class="divider" style="margin-left: 40px;" v-if="selectItem.tag&&selectItem.tag.length>0"></div>
-						<FormItem label="标签" v-if="selectItem.tag&&selectItem.tag.length>0"><TagInput v-model="selectItem.tag" style="width: 100%" :readonly="true"></TagInput></FormItem>
-					</Form>
+					<div class="right-fixed-container">
+						<Form :readonly="true" v-if="selectItem != null && selectItem.isCat == true">
+							<FormItem label="编码">{{ selectItem.id }}</FormItem>
+							<FormItem label="名称">{{ selectItem.name }}</FormItem>
+							<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
+							<FormItem label="备注" v-if="selectItem.desc && selectItem.desc.length > 0">{{ selectItem.desc }}</FormItem>
+						</Form>
+						<Form :readonly="true" v-if="selectItem != null && selectItem.isCat == false">
+							<FormItem label="编码">{{ selectItem.id }}</FormItem>
+							<FormItem label="名称">{{ selectItem.name }}</FormItem>
+							<FormItem label="日期">{{ selectItem.create_time }}</FormItem>
+							<FormItem label="链接">
+								<a :href="selectItem.url" target="_blank">{{ selectItem.url }}</a>
+							</FormItem>
+							<FormItem label="备注" v-if="selectItem.desc && selectItem.desc.length > 0">{{ selectItem.desc }}</FormItem>
+							<div class="divider" style="margin-left: 40px;" v-if="selectItem.tag && selectItem.tag.length > 0"></div>
+							<FormItem label="标签" v-if="selectItem.tag && selectItem.tag.length > 0">
+								<TagInput v-model="selectItem.tag" style="width: 100%" :readonly="true"></TagInput>
+							</FormItem>
+						</Form>
+					</div>
 				</Cell>
 			</Row>
 		</div>
@@ -178,7 +189,7 @@ export default {
 						if (parent) {
 							parent.expIcon = 'h-tree-item-bookmark';
 							that.getBookmark(parent.id, callback);
-						}else{
+						} else {
 							callback([]);
 						}
 					}
