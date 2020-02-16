@@ -54,10 +54,11 @@
         <Avatar :src="account.avatar_url" :width="100"></Avatar>
       </p>
       <p class="account-name">{{account.login}}</p>
-      <p class="account-desc"><pre>{{account.type}}</pre></p>
+      <p class="account-desc"><pre>{{account.gist_description}}</pre></p>
       <div class="account-detail-desc">
-        <p><i class="icon-mail"></i><span>{{account.id}}</span></p>
-        <p><i class="icon-briefcase"></i><span><a :href="account.html_url" target="_blank">{{account.html_url}}</a></span></p>
+        <p><i class="h-icon-calendar"></i><span>{{account.gist_created_at}}</span></p>
+        <p><i class="h-icon-home"></i><span><a :href="account.html_url" target="_blank">{{account.login}}</a></span></p>
+		<p><i class="h-icon-link"></i><span><a :href="account.gist_url" target="_blank">{{account.gist_url}}</a></span></p>
       </div>
     </div>
   </div>

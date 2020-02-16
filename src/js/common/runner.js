@@ -20,10 +20,16 @@ const Runner = {
 					let bookmark = files['bookmark.json']
 					let iBooks = (bookmark && bookmark.content) ? Utils.safeParse(bookmark.content) : [];
 					iBooks = Utils.isArray(iBooks) ? iBooks : [];
+					console.log(response.data);
+					let owner = response.data.owner;
+					owner.gist_url = response.data.html_url;
+					owner.gist_description = response.data.description;
+					owner.gist_created_at = response.data.created_at;
+					owner.gist_updated_at = response.data.updated_at;
 					callback(0, {
 						category: iCats,
 						bookmark: iBooks,
-						owner: response.data.owner
+						owner: owner
 					})
 				} else {
 					callback(1, response.status)

@@ -114,7 +114,7 @@ export default {
 	data() {
 		return {
 			searchText: '',
-			infoMenu: [{ key: 'info', title: '个人信息', icon: 'h-icon-user' }, { key: 'logout', title: '退出登录', icon: 'h-icon-outbox' }]
+			infoMenu: [{ key: 'info', title: '个人信息', icon: 'h-icon-user' }, { key: 'logout', title: '退出登录', icon: 'h-icon-close' }]
 		};
 	},
 	computed: {
