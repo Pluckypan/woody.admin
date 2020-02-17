@@ -152,6 +152,7 @@ export default {
 			DB.Bookmark.remove(data, function(err, numRemoved) {
 				if (numRemoved && numRemoved > 0) {
 					that.$Message('删除成功');
+					window.location.reload();
 				}
 			});
 		},
@@ -163,6 +164,7 @@ export default {
 			DB.Category.remove(data, function(err, numRemoved) {
 				if (numRemoved && numRemoved > 0) {
 					that.$Message('删除成功');
+					window.location.reload();
 				}
 			});
 		},
