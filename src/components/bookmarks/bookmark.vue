@@ -14,8 +14,9 @@
 			</div>
 			<div class="h-panel-body">
 				<Form :label-width="110" mode="twocolumn" :model="bookmark" :rules="validationRules" ref="form" showErrorTip>
-					<FormItem label="分类" prop="cid" single><Select v-model="bookmark.cid" :datas="cats"></Select></FormItem>
-					<FormItem label="名称" prop="name"><input type="text" v-model="bookmark.name" placeholder="限制输入10个字" v-wordlimit="50" /></FormItem>
+					<FormItem label="分类" prop="cid"><Select v-model="bookmark.cid" :datas="cats"></Select></FormItem>
+					<FormItem label="图标"><Avatar :src="bookmark.icon" :width="20"></Avatar></FormItem>
+					<FormItem label="名称" prop="name"><input type="text" v-model="bookmark.name" placeholder="限制输入50个字" v-wordlimit="100" /></FormItem>
 					<FormItem label="编号" readonly>{{ bookmark.id }}</FormItem>
 					<FormItem label="链接" prop="url"><input type="text" v-model="bookmark.url" /></FormItem>
 					<FormItem label="常用" readonly><Checkbox v-model="bookmark.hot"></Checkbox></FormItem>
@@ -26,7 +27,7 @@
 					</FormItem>
 					<FormItem label="标签" prop="tag"><TagInput v-model="bookmark.tag"></TagInput></FormItem>
 					<FormItem label="备注" prop="desc" single>
-						<textarea rows="3" v-autosize v-wordcount="100" placeholder="添加一段描述" v-model="bookmark.desc"></textarea>
+						<textarea rows="3" v-autosize v-wordcount="2000" placeholder="添加一段描述" v-model="bookmark.desc"></textarea>
 					</FormItem>
 					<FormItem single>
 						<Button color="primary" @click="save">{{ this.isEdit ? '更新' : '保存' }}</Button>
@@ -36,6 +37,7 @@
 						<Button @click="del" v-if="this.isEdit">删除</Button>
 						&nbsp;&nbsp;&nbsp;
 						<Button @click="open" v-if="this.isEdit">打开</Button>
+						<Button @click="importJson" v-if="!this.isEdit">导入</Button>
 					</FormItem>
 				</Form>
 			</div>
@@ -57,6 +59,8 @@ export default {
 				hot: false,
 				url: '',
 				order: 0,
+				icon: '',
+				cover: '',
 				create_time: manba().format('f')
 			},
 			cats: [{ title: '根', key: 'root' }],
@@ -80,10 +84,12 @@ export default {
 					cid: doc.cid,
 					id: doc.id,
 					name: doc.name,
-					desc: doc.desc,
+					desc: doc.icon,
 					tag: doc.tag,
 					hot: doc.hot,
 					url: doc.url,
+					icon: doc.icon,
+					cover: doc.cover,
 					order: doc.order,
 					create_time: doc.create_time
 				};
@@ -96,6 +102,34 @@ export default {
 		});
 	},
 	methods: {
+		importJson() {
+			var desc = this.bookmark.desc;
+			if (!desc || desc.length == 0) {
+				this.$Message('请在备注中输入json');
+				return;
+			}
+			var json = null;
+			try {
+				json = JSON.parse(desc);
+			} catch (e) {
+				json = null;
+			}
+			if (!json || !json.url) {
+				this.$Message('请输入合法的书签信息');
+				return;
+			}
+			this.bookmark = {
+				cid: json.cid,
+				id: json.id,
+				name: json.name,
+				desc: json.desc,
+				tag: json.tag,
+				icon: json.icon,
+				cover: json.cover,
+				url: json.url,
+				create_time: manba().format('f')
+			};
+		},
 		open() {
 			window.open(this.bookmark.url);
 		},
@@ -125,6 +159,8 @@ export default {
 			this.bookmark.name = '';
 			this.bookmark.url = '';
 			this.bookmark.tag = [];
+			this.bookmark.icon = '';
+			this.bookmark.cover = '';
 			this.bookmark.order = 0;
 			this.isEdit = false;
 			this.$refs.form.reset();

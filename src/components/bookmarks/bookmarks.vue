@@ -103,7 +103,7 @@ export default {
 		changePage(page) {
 			this.pagination.page = page.cur;
 			this.pagination.size = page.size;
-			let start = (page.cur - 1) * 20;
+			let start = (page.cur - 1) * page.size;
 			let end = start + page.size;
 			this.datas = this.allDatas.slice(start, end);
 		},
@@ -120,7 +120,7 @@ export default {
 				that.loading = false;
 				that.changePage({
 					cur: 1,
-					size: 20
+					size: that.pagination.size
 				});
 			});
 		}

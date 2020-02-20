@@ -78,6 +78,7 @@ export default {
 			tabs: [{ key: 'all', title: '全部分类' }, { key: 'm3', title: '最近添加' }],
 			type: 'China',
 			datas: [],
+			allDatas: [],
 			counts: {
 				all: 0,
 				m3: 0
@@ -107,7 +108,7 @@ export default {
 				this.loading = true;
 				const that = this;
 				DB.Category.getThreeMonth(function(err, docs) {
-					that.datas = docs;
+					that.allDatas = docs;
 					const m3 = docs ? docs.length : 0;
 					that.pagination.total = m3;
 					that.counts['m3'] = m3;
@@ -131,7 +132,9 @@ export default {
 		changePage(page) {
 			this.pagination.page = page.cur;
 			this.pagination.size = page.size;
-			this.getData(null);
+			let start = (page.cur - 1) * page.size;
+			let end = start + page.size;
+			this.datas = this.allDatas.slice(start, end);
 		},
 		open(data) {
 			if (data.desc && data.desc.length > 10) {
@@ -150,8 +153,8 @@ export default {
 			if (selArr && selArr.length > 0) {
 				this.$Confirm('确定删除选中的数据吗？', 'WOODY ADMIN')
 					.then(() => {
-						const newArr = this.datas.filter(item => selArr.indexOf(item) == -1);
-						this.datas = newArr;
+						const newArr = this.allDatas.filter(item => selArr.indexOf(item) == -1);
+						this.allDatas = newArr;
 						DB.Category.removeArray(selArr, function(err, numRemoved) {
 							console.log(numRemoved);
 						});
@@ -164,7 +167,7 @@ export default {
 			DB.Category.remove(data, function(err, numRemoved) {
 				console.log(numRemoved);
 				if (numRemoved && numRemoved > 0) {
-					that.datas = that.datas.filter(item => data.id != item.id);
+					that.allDatas = that.allDatas.filter(item => data.id != item.id);
 				}
 			});
 		},
@@ -173,10 +176,14 @@ export default {
 			this.loading = true;
 			const that = this;
 			DB.Category.getAll(nameFilter, function(err, docs) {
-				that.datas = docs;
+				that.allDatas = docs;
 				const all = docs ? docs.length : 0;
 				that.pagination.total = all;
 				that.loading = false;
+				that.changePage({
+					cur: 1,
+					size: that.pagination.size
+				});
 			});
 		}
 	},

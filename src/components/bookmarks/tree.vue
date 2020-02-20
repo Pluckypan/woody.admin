@@ -65,7 +65,10 @@
 
 <template>
 	<div class="table-basic-vue frame-page h-panel">
-		<div class="h-panel-bar"><span class="h-panel-title">我的书签</span></div>
+		<div class="h-panel-bar" v-font="20">
+			<span class="h-panel-title">我的书签</span>
+			<i @click="submit" :class="submiting ? 'h-icon-spinner float-right' : 'h-icon-upload float-right'"></i>
+		</div>
 		<div class="h-panel-body tree4-demo-vue">
 			<Row>
 				<Cell :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
@@ -94,7 +97,7 @@
 							<FormItem label="备注" v-if="selectItem.desc && selectItem.desc.length > 0">{{ selectItem.desc }}</FormItem>
 							<FormItem>
 								<Button color="primary" @click="editCat(selectItem.id)">编辑</Button>
-								<Button @click="deleteCat(selectItem)">删除</Button>
+								<Button @click="deleteCat(selectItem)" :disabled="selectItem.expIcon != 'h-tree-item-bookmark'">删除</Button>
 							</FormItem>
 						</Form>
 						<Form :readonly="true" v-if="selectItem != null && selectItem.isCat == false">
@@ -128,7 +131,7 @@ export default {
 		return {
 			param: {
 				keyName: 'id',
-				// parentName: 'pid',
+				parentName: 'pid',
 				titleName: 'name',
 				dataMode: 'list',
 				// datas: [],
@@ -139,11 +142,26 @@ export default {
 					});
 				}
 			},
-			selectItem: null
+			selectItem: null,
+			submiting: false
 		};
 	},
 	mounted() {},
 	methods: {
+		submit() {
+			let that = this;
+			if (that.submiting) return;
+			that.submiting = true;
+			Runner.submit(function(err, data) {
+				that.submiting = false;
+				if (err) {
+					console.log('提交出错:' + err);
+					that.$Message(`提交出错`);
+				} else {
+					that.$Message(`提交成功.`);
+				}
+			});
+		},
 		editBookmark(id) {
 			this.$router.push({ name: 'bookmark', query: { id: id } });
 		},
@@ -151,8 +169,7 @@ export default {
 			const that = this;
 			DB.Bookmark.remove(data, function(err, numRemoved) {
 				if (numRemoved && numRemoved > 0) {
-					that.$Message('删除成功');
-					window.location.reload();
+					that.remove(data);
 				}
 			});
 		},
@@ -163,8 +180,7 @@ export default {
 			const that = this;
 			DB.Category.remove(data, function(err, numRemoved) {
 				if (numRemoved && numRemoved > 0) {
-					that.$Message('删除成功');
-					window.location.reload();
+					that.remove(data);
 				}
 			});
 		},
@@ -179,11 +195,34 @@ export default {
 		append(item) {
 			this.$refs.demo.appendTreeItem(item.id, { id: utils.uuid(), name: '测试' });
 		},
+		removeTreeItem(key) {
+			let tree = this.$refs.demo;
+			let item = tree.treeObj[key];
+			console.log(item);
+			if (item) {
+				let index = tree.treeDatas.indexOf(item);
+				console.log(index + ' ' + item.parentKey + ' ' + tree.treeObj[item.parentKey]);
+				if (index > -1) {
+					tree.treeDatas.splice(index, 1);
+				} else if (item.parentKey && tree.treeObj[item.parentKey]) {
+					let parent = tree.treeObj[item.parentKey];
+					console.log(parent);
+					if (parent.children.indexOf(item) > -1) {
+						parent.children.splice(parent.children.indexOf(item), 1);
+					}
+				}
+				delete tree.treeObj[key];
+			}
+		},
 		remove(item) {
-			this.$refs.demo.removeTreeItem(item.id);
+			this.$Message('删除成功');
+			this.selectItem = null;
+			// this.$refs.demo.removeTreeItem(item.id);
+			this.removeTreeItem(item.id);
 		},
 		choose(data) {},
 		select(data) {
+			console.log(this.$refs.demo);
 			this.selectItem = data;
 		},
 		open(data) {

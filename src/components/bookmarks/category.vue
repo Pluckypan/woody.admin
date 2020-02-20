@@ -15,7 +15,7 @@
 			<div class="h-panel-body">
 				<Form :label-width="110" mode="twocolumn" :model="category" :rules="validationRules" ref="form" showErrorTip>
 					<FormItem label="父级分类" prop="pid" single><Select v-model="category.pid" :datas="cats"></Select></FormItem>
-					<FormItem label="名称" prop="name"><input type="text" v-model="category.name" placeholder="限制输入10个字" v-wordlimit="10" /></FormItem>
+					<FormItem label="名称" prop="name"><input type="text" v-model="category.name" placeholder="限制输入50个字" v-wordlimit="100" /></FormItem>
 					<FormItem label="编号" readonly>{{ category.id }}</FormItem>
 					<FormItem label="排序" prop="order"><Slider v-model="category.order" :range="{ start: 0, end: 255 }"></Slider></FormItem>
 					<FormItem readonly label="排序">{{ category.order }}</FormItem>
@@ -24,7 +24,7 @@
 					</FormItem>
 					<FormItem label="常用" readonly><Checkbox v-model="category.hot"></Checkbox></FormItem>
 					<FormItem label="备注" prop="desc" single>
-						<textarea rows="3" v-autosize v-wordcount="50" placeholder="添加一段描述" v-model="category.desc"></textarea>
+						<textarea rows="3" v-autosize v-wordcount="200" placeholder="添加一段描述" v-model="category.desc"></textarea>
 					</FormItem>
 					<FormItem single>
 						<Button color="primary" @click="save">{{ this.isEdit ? '更新' : '保存' }}</Button>
